@@ -16,12 +16,6 @@
 本项目主要是通过<a href="https://www.tslang.cn" target="_blank">Typescript</a>、<a href="https://cli.vuejs.org" target="_blank">Vue3.0 Cli</a>对<a href="https://easy-mock.com" target="_blank">Easy Mock</a>进行重构，主要是为了熟悉通过<a href="https://www.tslang.cn" target="_blank">Typescript</a>编写VUE,此仓库为client，搭配<a href="https://github.com/chenkaibo1/mock-server.git" target="_blank">mock-server</a>一起使用
 Easy Mock 是一个可视化，并且能快速生成**模拟数据**的持久化服务。
 
-<p align="center">
-  <a href="https://easy-mock.com" target="_blank">
-    <img src="http://img.souche.com/f2e/313b36aaa7d0a3af08718c38a2869534.png" width="700px">
-  </a>
-</p>
-
 ## 特性
 
 - 支持接口代理
