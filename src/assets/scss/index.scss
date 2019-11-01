@@ -1,0 +1,17 @@
+@import './normalize.scss';
+@import './reset.scss';
+@import '../iconfont//iconfont.css';
+@import './variable.scss';
+@import './element-ui.scss';
+@import './common.scss';
+@import './transition.scss';
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+body {
+  font-size: 16px;
+}

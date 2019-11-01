@@ -1,0 +1,98 @@
+/*
+* 主题样式修改
+* 1.修改element中theme的主色调：$--color-primary
+* 2.修改图片和iconfont
+* 3.自定义样式修改主要下面四个：
+*   $--em-color-primary、【主色】
+*   $--em-color-text-select 【选中文字】
+*   $--em-color-shadow 【阴影】
+*   $--em-background-select 【选中列表】
+*/
+
+/* theme
+-------------------------- */
+$--em-color-primary: #56bc8a !default; //主色
+$--em-color-white: #ffffff !default;
+$--em-color-black: #000000 !default;
+
+/* 辅助色 [根据UI设置特殊颜色，自行加入修改]
+-------------------------- */
+$--em-color-Auxiliary-1: #7a99c6 !default;
+$--em-color-Auxiliary-2: #feb84a !default;
+$--em-color-Auxiliary-3: #ff0000 !default;
+$--em-color-Auxiliary-4: #606266 !default;
+$--em-color-Auxiliary-5: #009e7e !default;
+$--em-color-Auxiliary-6: #9ce685 !default;
+$--em-color-Auxiliary-7: #f49467 !default;
+$--em-color-Auxiliary-8: #4aaefe !default;
+$--em-color-Auxiliary-9: #6a5afc !default;
+
+/* Border
+-------------------------- */
+$--em-max--width: 1190px !default; // 最大宽度
+
+/* Border
+-------------------------- */
+$--em-border-color-base: #d9dbe0 !default; // 边框色
+$--em-color-shadow: #e0f1ed !default; //阴影色
+$--em-color-shadow-2: #909399 !default; //阴影色
+$--em-color-shadow-3: #dff3f1 !default; //阴影色
+
+/* Text
+-------------------------- */
+$--em-color-text-black: #333333 !default; // 文本黑色
+$--em-color-text-middle: #666666 !default; // 文本中性色
+$--em-color-text-white: #edeef5 !default; // 亮色文本
+$--em-color-text-Level-1: #2c2d31 !default; // 功能入口/一级文本
+$--em-color-text-Level-2: #4c556e !default; // 二级文本/二级分类
+$--em-color-text-Level-3: #909399 !default; //三级文本
+$--em-color-text-Level-link: #0f484d !default; //link文本
+$--em-color-text-description: #999ead !default; // 底部导航/说明文本
+$--em-color-text-select: #71c3b2 !default; // 选中文字
+
+/* Background
+-------------------------- */
+$--em-background-base: #f5f5f7 !default; // 背景/部分类型背景
+$--em-background-select: #f0f9f7 !default; // 选中列表
+
+/* Button
+-------------------------- */
+// 默认按钮
+$--em-button-default-font-color: $--em-color-text-Level-2 !default;
+$--em-button-default-background-color: $--em-color-white !default;
+$--em-button-default-border-color: $--em-border-color-base !default;
+// disable按钮
+$--em-button-disabled-font-color: $--em-color-text-description !default;
+$--em-button-disabled-background-color: $--em-background-base !default;
+$--em-button-disabled-border-color: $--em-border-color-base;
+// primary按钮
+$--em-button-primary-border-color: $--em-color-primary !default;
+$--em-button-primary-font-color: $--em-color-white !default;
+$--em-button-primary-background-color: $--em-color-primary !default;
+
+// font-size
+$--em-fontSize36: 36px; //登录，大标题，大数字//统一修改成25px
+$--em-fontSize20: 20px; //导航栏一级标题，分类大标题
+$--em-fontSize18: 18px; //导航栏二级标题选中/未选中
+$--em-fontSize16: 16px; //列表名称，重要内容信息，长按钮文字等
+$--em-fontSize14: 14px; //内容信息
+$--em-fontSize12: 12px; //极端情况文字说明及备注
+
+//border-radius
+$--em-borderRadius22: 2px; //圆角1
+$--em-borderRadius44: 4px; //圆角2
+$--em-borderRadius88: 8px; //圆角4
+
+//margin和padding
+$--em-interval32: 32px;
+$--em-interval28: 28px;
+$--em-interval24: 24px;
+$--em-interval18: 18px;
+$--em-interval16: 16px;
+$--em-interval12: 12px;
+
+//基础样式
+$--em-maxWidth: 1100px;
+$--em-padding: 20px;
+$--em-inputWidth-1: 260px; // input 宽度
+$--em-inputWidth-2: 320px; // input 宽度

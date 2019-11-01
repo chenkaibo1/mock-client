@@ -1,0 +1,26 @@
+.el-scrollbar__wrap {
+  overflow: unset !important;
+  overflow-y: scroll !important;
+}
+
+.el-scrollbar__wrap {
+  margin-bottom: -6px !important;
+}
+// dialog样式
+.el-dialog {
+  width: 560px;
+  overflow: hidden !important;
+
+  .el-dialog__header {
+    border-bottom: 1px solid $--em-border-color-base !important;
+
+    .el-dialog__title {
+      color: $--em-color-text-Level-1;
+    }
+  }
+
+  .el-dialog__body {
+    padding: $--em-interval32;
+    padding-bottom: 0;
+  }
+}
