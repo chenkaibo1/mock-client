@@ -45,7 +45,7 @@ Easy Mock 是一个可视化，并且能快速生成**模拟数据**的持久化
 
 ```sh
 $ git clone https://github.com/chenkaibo1/mock-client.git
-$ cd mock-client && npm install
+$ cd mock-client && yarn
 ```
 
 **背景图配置：**
@@ -54,15 +54,11 @@ $ cd mock-client && npm install
 
 如果 `unsplashClientId` 配置留空，默认由 Bing 提供服务。
 
-**注意：**
-
-- `publicPath` 默认是 `'/dist/'`。如有需要，可以将其替换成自己的 CDN；
-- 关于 `fe` 的配置，一旦发生改变应该重新执行 build 命令。
 
 ### 启动
 
 ```sh
-$ npm run dev
+$ yarn run dev
 # 访问 http://127.0.0.1:7300
 ```
 
@@ -72,14 +68,6 @@ $ npm run dev
 # 前端静态资源构建打包
 $ npm run build
 
-# 以生产环境方式启动，需要提前执行 build
-$ npm run start
-
-# 单元测试
-$ npm run test
-
-# 语法检测
-$ npm run lint
 ```
 
 ## 服务器部署
