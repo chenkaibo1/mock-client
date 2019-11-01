@@ -66,7 +66,7 @@ $ yarn run dev
 
 ```sh
 # 前端静态资源构建打包
-$ npm run build
+$ yarn run build
 
 ```
 
@@ -89,7 +89,7 @@ $ [sudo] npm install pm2 -g
 > 在此之前，你应该已经完成了 build。
 
 ```sh
-$ NODE_ENV=production pm2 start app.js
+$ NODE_ENV=production pm2 start bin/www.ts
 ```
 
 ## License
