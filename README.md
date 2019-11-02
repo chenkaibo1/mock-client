@@ -81,7 +81,7 @@ $ yarn run build
 #### 全局安装 PM2
 
 ```sh
-$ [sudo] npm install pm2 -g
+$ yarn install pm2 -g
 ```
 
 #### 用 PM2 启动
