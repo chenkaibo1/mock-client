@@ -9,13 +9,17 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './plugins' // 加载插件
 import '@/assets/scss/index.scss' // 引入全局样式
 import '@/assets/iconfont/iconfont.js' // 引入iconfont
+import 'font-awesome-scss/css/font-awesome.min.scss'
 // @ts-ignore
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN.js'
 // @ts-ignore
 import enLocale from 'element-ui/lib/locale/lang/en.js'
 import zhLocaleIView from '@/locales/zh-CN.js'
 import enLocaleIView from '@/locales/en.js'
+// @ts-ignore
+import clickOutside from 'v-click-outside'
 
+Vue.use(clickOutside)
 // 添加国际化
 Vue.use(VueI18n)
 const messages = {

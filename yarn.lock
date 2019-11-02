@@ -3895,6 +3895,11 @@ follow-redirects@^1.0.0:
   dependencies:
     debug "^3.0.0"
 
+font-awesome-scss@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/font-awesome-scss/download/font-awesome-scss-1.0.0.tgz#aaea34614f636e0c026b689280844543fb4dff24"
+  integrity sha1-quo0YU9jbgwCa2iSgIRFQ/tN/yQ=
+
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/for-in/download/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -8642,6 +8647,11 @@ uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.3"
   resolved "https://registry.npm.taobao.org/uuid/download/uuid-3.3.3.tgz?cache=0&sync_timestamp=1566221202613&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fuuid%2Fdownload%2Fuuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
   integrity sha1-RWjwIW54dg7h2/Ok0s9T4iQRKGY=
+
+v-click-outside@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.npm.taobao.org/v-click-outside/download/v-click-outside-2.1.4.tgz#7d7813b09a0fd4a9d0fbccc2ca12ca7c5591e087"
+  integrity sha1-fXgTsJoP1KnQ+8zCyhLKfFWR4Ic=
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"

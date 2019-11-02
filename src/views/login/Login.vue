@@ -22,27 +22,25 @@
           >{{$tc('p.login.form.button', 2)}}</el-button>
         </transition>
         <transition name="fadeLeft">
-          <div v-show="showLogin" @keyup.enter="login">
+          <div v-show="showLogin" @keyup.enter="login" v-click-outside="onClickOutside">
             <el-input
               size="large"
               :placeholder="$tc('p.login.form.placeholder', 1)"
               ref="user"
               class="username"
               v-model="loginData.username"
-              @blur="onClickOutside"
             ></el-input>
             <el-input
               size="large"
               :placeholder="$t('p.login.form.password')"
               type="password"
               v-model="loginData.password"
-              @blur="onClickOutside"
             ></el-input>
           </div>
         </transition>
       </div>
     </transition>
-    <transition name="fade">
+    <transition name="fade" style>
       <section :class="['login-page', {'page-hidden': page > 0}]" style="z-index:6">
         <div class="wallpaper" ref="wallpaper" v-show="wallpaperVisible"></div>
         <div class="about" @click="page = 1">{{$tc('p.login.about', 1)}}</div>
@@ -207,6 +205,24 @@ export default class Layout extends Vue {
   }
   // 登录方法
   login(): void {
+    if (!this.loginData.username || !this.loginData.password) {
+      this.$message.warning('用户名或密码不能为空')
+      return
+    }
+    if (
+      !/^[a-zA-Z]{1}\w{0,15}$/.test(this.loginData.username) ||
+      /[\u4e00-\u9fa5]+/.test(this.loginData.password) ||
+      this.loginData.password.length > 16 ||
+      this.loginData.password.length < 1
+    ) {
+      this.$alert(
+        '<p style="color:red;text-align:center;margin-bottom:5px">用户名或密码错误<p><p><strong>规则</strong></p><p>&nbsp&nbsp;用户名：字符开头0-16位字母或数字</p><p>&nbsp&nbsp密码：0-16位不为汉字的字符</p>',
+        {
+          dangerouslyUseHTMLString: true
+        }
+      )
+      return
+    }
     loginApi({ username: this.loginData.username, password: md5(md5(this.loginData.password)) }).then((res: any) => {
       setItem('user', JSON.stringify(res.data.user))
       setItem('isLogin', true)
@@ -242,7 +258,7 @@ export default class Layout extends Vue {
     margin-left: -150px;
     margin-top: -165px;
     text-align: center;
-    z-index: 9999;
+    z-index: 100;
     img {
       width: 230px;
       margin-bottom: 15px;
