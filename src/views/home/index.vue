@@ -19,22 +19,22 @@
             <!-- 检查 user.id 防止闪烁 -->
             <div
               :class="{
-                  'is-join': page.type === 2 || (page.type === 0 && user.id && item.user._id !== user.id),
-                  'is-group': page.type === 1
+                  'is-join': pageHeader.type === 2 || (pageHeader.type === 0 && user.id && item.user._id !== user.id),
+                  'is-group': pageHeader.type === 1
                 }"
             >
               <div class="project-collect">
                 <transition name="zoom" mode="out-in">
-                  <Icon
-                    :type="item.extend.is_workbench ? 'el-icon-star-on' : 'el-icon-star-off'"
+                  <!-- <i
+                    :class="item.extend.is_workbench ? 'el-icon-star-on' : 'el-icon-star-off'"
                     :key="item.extend.is_workbench"
-                  ></Icon>
+                  ></i>-->
                 </transition>
               </div>
               <h2>{{item.name}}</h2>
               <div class="project-description">{{item.description}}</div>
               <div class="project-url">{{item.url}}</div>
-              <div class="project-member" v-if="page.type === 0">
+              <div class="project-member" v-if="pageHeader.type === 0">
                 <img :src="item.user.head_img" />
                 <img :src="img.head_img" v-for="(img, i) in item.members" :key="i" />
               </div>
