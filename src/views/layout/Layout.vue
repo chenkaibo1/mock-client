@@ -40,10 +40,8 @@
               {{$t('c.layout.menu[2]')}}
             </el-menu-item>
             <el-menu-item index="4" @click.native="$router.push('/docs')">
-              <Badge dot :count="readChangelog ? '0' : '1'">
-                <i class="fa fa-book fa-lg nav-icon-color"></i>
-                {{$t('c.layout.menu[3]')}}
-              </Badge>
+              <i class="fa fa-book fa-lg nav-icon-color"></i>
+              {{$t('c.layout.menu[3]')}}
             </el-menu-item>
             <el-submenu index="5">
               <template slot="title">
@@ -87,7 +85,12 @@
                 {{$t('c.layout.menu[5][1]')}}
               </el-menu-item>
             </el-submenu>
-            <el-menu-item class="nav-avatar" index="6-3" @click.native="$router.push('/login')">
+            <el-menu-item
+              v-show="!userHeadImg"
+              class="nav-avatar"
+              index="7"
+              @click.native="$router.push('/login')"
+            >
               <i type="log-in"></i>
               {{$t('c.layout.menu[5][2]')}}
             </el-menu-item>
@@ -110,6 +113,7 @@ import { getItem } from '@/common/storage'
 export default class Layout extends Vue {
   activeIndex: string = '1'
   pageKey: string = ''
+  searchValue: string = ''
   get userHeadImg() {
     return JSON.parse(getItem('user')).headImg
   }
@@ -157,6 +161,15 @@ export default class Layout extends Vue {
       }
       .menu {
         flex: 15;
+        .nav-avatar {
+          float: right;
+          img {
+            border-radius: 50%;
+            border: 2px solid #fff;
+            width: 28px;
+            height: 28px;
+          }
+        }
       }
     }
   }
@@ -164,6 +177,6 @@ export default class Layout extends Vue {
   }
 }
 .nav-icon-color {
-  color: #c0c4cc;
+  color: $--em-color-white;
 }
 </style>

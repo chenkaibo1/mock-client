@@ -46,7 +46,7 @@ Vue.use(Element, {
 Vue.use(localComponent)
 
 Vue.config.productionTip = false // 设置为 false 以阻止 vue 在启动时生成生产提示
-Vue.config.devtools = process.env.NODE_ENV === 'production' // 是否开启vue-devtools
+Vue.config.devtools = process.env.NODE_ENV === 'development' // 是否开启vue-devtools
 
 document.body.ondrop = (event) => {
   event.preventDefault()

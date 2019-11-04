@@ -24,7 +24,7 @@ $--em-color-Auxiliary-4: #606266 !default;
 $--em-color-Auxiliary-5: #009e7e !default;
 $--em-color-Auxiliary-6: #9ce685 !default;
 $--em-color-Auxiliary-7: #f49467 !default;
-$--em-color-Auxiliary-8: #4aaefe !default;
+$--em-color-Auxiliary-8: #2d8cf0 !default;
 $--em-color-Auxiliary-9: #6a5afc !default;
 
 /* Border
@@ -34,7 +34,7 @@ $--em-max--width: 1190px !default; // 最大宽度
 /* Border
 -------------------------- */
 $--em-border-color-base: #d9dbe0 !default; // 边框色
-$--em-color-shadow: #e0f1ed !default; //阴影色
+$--em-color-shadow: #e0f1edd7 !default; //阴影色
 $--em-color-shadow-2: #909399 !default; //阴影色
 $--em-color-shadow-3: #dff3f1 !default; //阴影色
 
@@ -96,3 +96,4 @@ $--em-maxWidth: 1100px;
 $--em-padding: 20px;
 $--em-inputWidth-1: 260px; // input 宽度
 $--em-inputWidth-2: 320px; // input 宽度
+$--em-all-transition: all .3s;

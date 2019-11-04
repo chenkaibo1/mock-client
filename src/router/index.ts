@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/views/login/Login.vue'
+import Login from '@/views/login/login.vue'
 import NProgress from 'nprogress'
 import { getItem } from '../common/storage'
 
@@ -25,12 +25,12 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "layout" */ '@/views/layout/Layout.vue'),
+      component: () => import(/* webpackChunkName: "layout" */ '@/views/layout/layout.vue'),
       children: [
         {
           path: '/home',
           name: 'home',
-          component: () => import(/* webpackChunkName: "home" */ '@/views/home/Home.vue')
+          component: () => import(/* webpackChunkName: "home" */ '@/views/home/home.vue')
         }
       ]
     },
