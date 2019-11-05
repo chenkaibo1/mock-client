@@ -13,54 +13,52 @@
       </el-radio-group>
     </em-header>
     <transition name="fade">
-      <div class="project-list-wrapper">
-        <div class="project-list">
-          <div v-for="(item, index) in projects" :key="index">
-            <!-- 检查 user.id 防止闪烁 -->
-            <div
-              :class="{
+      <div class="project-list">
+        <div v-for="(item, index) in projects" :key="index">
+          <!-- 检查 user.id 防止闪烁 -->
+          <div
+            :class="{
                   'is-join': pageHeader.type === 2 || (pageHeader.type === 0 && user.id && item.user._id !== user.id),
                   'is-group': pageHeader.type === 1
                 }"
-            >
-              <div class="project-collect">
-                <transition name="zoom" mode="out-in">
-                  <!-- <i
+          >
+            <div class="project-collect">
+              <transition name="zoom" mode="out-in">
+                <!-- <i
                     :class="item.extend.is_workbench ? 'el-icon-star-on' : 'el-icon-star-off'"
                     :key="item.extend.is_workbench"
-                  ></i>-->
-                </transition>
-              </div>
-              <h2>{{item.name}}</h2>
-              <div class="project-description">{{item.description}}</div>
-              <div class="project-url">{{item.url}}</div>
-              <div class="project-member" v-if="pageHeader.type === 0">
-                <img :src="item.user.head_img" />
-                <img :src="img.head_img" v-for="(img, i) in item.members" :key="i" />
-              </div>
-              <el-button-group class="project-control">
-                <el-button
-                  type="ghost"
-                  icon="el-icon-link"
-                  :title="$t('p.project.control[0]')"
-                  class="copy-url"
-                  @click="clip(item)"
-                ></el-button>
-                <el-button
-                  type="ghost"
-                  icon="el-icon-copy-document"
-                  :title="$t('p.project.control[1]')"
-                  style="width: 34%;"
-                  @click.stop="cloneProject(item)"
-                ></el-button>
-                <el-button
-                  type="ghost"
-                  icon="el-icon-delete"
-                  :title="$t('p.project.control[2]')"
-                  @click.stop="deleteProject(item)"
-                ></el-button>
-              </el-button-group>
+                ></i>-->
+              </transition>
             </div>
+            <h2>{{item.name}}</h2>
+            <div class="project-description">{{item.description}}</div>
+            <div class="project-url">{{item.url}}</div>
+            <div class="project-member" v-if="pageHeader.type === 0">
+              <img :src="item.user.head_img" />
+              <img :src="img.head_img" v-for="(img, i) in item.members" :key="i" />
+            </div>
+            <el-button-group class="project-control">
+              <el-button
+                type="ghost"
+                icon="el-icon-link"
+                :title="$t('p.project.control[0]')"
+                class="copy-url"
+                @click="clip(item)"
+              ></el-button>
+              <el-button
+                type="ghost"
+                icon="el-icon-copy-document"
+                :title="$t('p.project.control[1]')"
+                style="width: 34%;"
+                @click.stop="cloneProject(item)"
+              ></el-button>
+              <el-button
+                type="ghost"
+                icon="el-icon-delete"
+                :title="$t('p.project.control[2]')"
+                @click.stop="deleteProject(item)"
+              ></el-button>
+            </el-button-group>
           </div>
         </div>
       </div>
@@ -70,6 +68,7 @@
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
+import { getProjects } from '@/api/project'
 @Component
 export default class Home extends Vue {
   btnValue: string = ''
@@ -103,6 +102,11 @@ export default class Home extends Vue {
         }
     }
   }
+  mounted() {
+    getProjects().then(res => {
+      this.projects = res.data
+    })
+  }
   clip() {}
   cloneProject() {}
   deleteProject() {}
@@ -114,19 +118,10 @@ export default class Home extends Vue {
 .em-home {
   width: 100%;
   height: 100%;
-  .header {
+  .project-list {
     max-width: $--em-maxWidth;
     overflow: hidden;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    .header-logo {
-      width: 50px;
-      height: 50px;
-      background-color: $--em-color-Auxiliary-8;
-      border-radius: $--em-borderRadius44;
-      color: $--em-color-white;
-    }
   }
 }
 </style>

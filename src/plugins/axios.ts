@@ -1,7 +1,8 @@
 import Vue, { PluginObject } from 'vue'
 import axios from 'axios'
+import router from '@/router'
 import { Message } from 'element-ui'
-import { getItem } from '../common/storage'
+import { getItem, clear } from '../common/storage'
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
@@ -32,7 +33,15 @@ _axios.interceptors.response.use(
     if (res.status === 200) {
       if (Object.getOwnPropertyDescriptor(res.data, 'success') && !res.data.success) {
         if (res.data.message) {
-          Message.error(res.data.message)
+          Message.error({
+            message: res.data.message,
+            onClose: function() {
+              if (res.data.code === 401) {
+                router.push({ path: '/login' })
+                clear()
+              }
+            }
+          })
         }
         return Promise.reject(res.data)
       } else {
@@ -40,8 +49,8 @@ _axios.interceptors.response.use(
           Message.success(res.data.message)
         }
       }
+      return res.data
     }
-    return res.data
     // Do something with response data
   },
   (error) => {
