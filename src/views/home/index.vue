@@ -6,7 +6,7 @@
       :title="pageHeader.title"
       :description="pageHeader.description"
     >
-      <el-radio-group v-model="btnValue">
+      <el-radio-group v-model="btnValue" @change="getProjectList">
         <el-radio-button :label="$t('p.project.filter[0]')"></el-radio-button>
         <el-radio-button :label="$t('p.project.filter[1]')"></el-radio-button>
         <el-radio-button :label="$t('p.project.filter[2]')"></el-radio-button>
@@ -14,65 +14,100 @@
     </em-header>
     <transition name="fade">
       <div class="project-list">
-        <div v-for="(item, index) in projects" :key="index">
+        <div v-for="item in projects" :key="item._id">
           <!-- 检查 user.id 防止闪烁 -->
-          <div
-            :class="{
-                  'is-join': pageHeader.type === 2 || (pageHeader.type === 0 && user.id && item.user._id !== user.id),
-                  'is-group': pageHeader.type === 1
-                }"
-          >
+          <div class="project-item">
             <div class="project-collect">
               <transition name="zoom" mode="out-in">
-                <!-- <i
-                    :class="item.extend.is_workbench ? 'el-icon-star-on' : 'el-icon-star-off'"
-                    :key="item.extend.is_workbench"
-                ></i>-->
+                <i class="el-icon-star-off"></i>
               </transition>
             </div>
             <h2>{{item.name}}</h2>
-            <div class="project-description">{{item.description}}</div>
-            <div class="project-url">{{item.url}}</div>
-            <div class="project-member" v-if="pageHeader.type === 0">
-              <img :src="item.user.head_img" />
-              <img :src="img.head_img" v-for="(img, i) in item.members" :key="i" />
+            <div class="project-description item-common">{{item.description}}</div>
+            <div class="project-url item-common">{{item.url}}</div>
+            <div class="project-member item-common">
+              <img :src="item.user.headImg" />
             </div>
             <el-button-group class="project-control">
               <el-button
                 type="ghost"
                 icon="el-icon-link"
                 :title="$t('p.project.control[0]')"
-                class="copy-url"
-                @click="clip(item)"
+                class="control-item"
+                id="copy-url"
+                @click.stop="clip(item)"
               ></el-button>
               <el-button
                 type="ghost"
                 icon="el-icon-copy-document"
+                class="control-item"
                 :title="$t('p.project.control[1]')"
-                style="width: 34%;"
-                @click.stop="cloneProject(item)"
+                @click.stop="cloneProject(item._id)"
               ></el-button>
               <el-button
                 type="ghost"
                 icon="el-icon-delete"
+                class="control-item"
                 :title="$t('p.project.control[2]')"
-                @click.stop="deleteProject(item)"
+                @click.stop="removeModal= {show: true, project: item, inputModel: ''}"
               ></el-button>
             </el-button-group>
           </div>
         </div>
       </div>
     </transition>
+    <el-dialog v-model="removeModal.show" width="360">
+      <p slot="title" style="color:#f60;text-align:center">
+        <i class="el-icon-warning"></i>
+        <span>{{$t('p.project.modal.delete.title')}}</span>
+      </p>
+      <div>
+        <p>
+          {{$tc('p.project.modal.delete.description', 1)}}
+          <strong
+            style="word-break:break-all;"
+          >{{(removeModal.project.user && removeModal.project.user.nick_name) || (removeModal.project.group && removeModal.project.group.name) }} / {{removeModal.project.name}}</strong>
+        </p>
+        <p>{{$tc('p.project.modal.delete.description', 2)}}</p>
+        <el-input
+          style="margin-top: 10px;"
+          v-model="removeModal.inputModel"
+          :placeholder="$t('p.project.modal.delete.placeholder')"
+        ></el-input>
+      </div>
+      <div slot="footer">
+        <el-button
+          type="error"
+          size="large"
+          long
+          :disabled="removeModal.project.name !== removeModal.inputModel"
+          @click="deleteProject"
+        >{{$t('p.project.modal.delete.button')}}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator'
-import { getProjects } from '@/api/project'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+// @ts-ignore
+import Clipboard from 'clipboard'
+import { getProjectsApi, cloneProjectApi, deleteProjectApi } from '@/api/project'
+import { remove } from 'lodash'
 @Component
 export default class Home extends Vue {
-  btnValue: string = ''
-  projects: any[] = [{}]
+  btnValue: string = '全部'
+  typeMap: any = {
+    全部: 0,
+    我创建的: 1,
+    我加入的: 2
+  }
+  projects: any[] = []
+  removeModal: any = {
+    show: false,
+    project: {},
+    inputModel: ''
+  }
   get pageHeader() {
     const route = this.$route
     switch (route.fullPath) {
@@ -102,14 +137,49 @@ export default class Home extends Vue {
         }
     }
   }
-  mounted() {
-    getProjects().then(res => {
+  get keyword() {
+    return this.$store.state.searchValue
+  }
+  @Watch('keyword')
+  keywordChange(val: string) {
+    getProjectsApi(this.typeMap[this.btnValue], val).then(res => {
       this.projects = res.data
     })
   }
-  clip() {}
-  cloneProject() {}
-  deleteProject() {}
+  mounted() {
+    this.getProjectList()
+  }
+  getProjectList() {
+    getProjectsApi(this.typeMap[this.btnValue]).then(res => {
+      this.projects = res.data
+    })
+  }
+  // 复制项目地址
+  clip(project: any) {
+    const clipboard = new Clipboard('#copy-url', {
+      text() {
+        return location.origin + '/mock/' + project._id + project.url
+      }
+    })
+    clipboard.on('success', (e: any) => {
+      e.clearSelection()
+      clipboard.destroy()
+      this.$message.success(this.$t('p.project.copySuccess') as string)
+    })
+  }
+  // 克隆项目
+  cloneProject(id: string) {
+    cloneProjectApi(id).then(() => {
+      this.getProjectList()
+    })
+  }
+  deleteProject(id: string) {
+    deleteProjectApi(id).then(() => {
+      remove(this.projects, item => {
+        return item._id === id
+      })
+    })
+  }
 }
 </script>
 
@@ -122,6 +192,77 @@ export default class Home extends Vue {
     max-width: $--em-maxWidth;
     overflow: hidden;
     margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    .project-item {
+      max-width: 225px;
+      margin: 20px;
+      background-color: $--em-color-white;
+      padding: 0 14px 20px 14px;
+      box-shadow: 0 1px 5px $--em-color-shadow-3;
+      border-radius: 4px;
+      transition: all 0.3s;
+      position: relative;
+      cursor: pointer;
+      .project-collect {
+        text-align: center;
+        font-size: 26px;
+        color: $--em-color-Auxiliary-10;
+      }
+      h2 {
+        font-weight: 700;
+        font-size: $--em-fontSize14;
+      }
+      .item-common {
+        padding: 10px;
+        border: 1px solid $--em-border-color-base;
+        border-radius: $--em-borderRadius44;
+        margin-top: 10px;
+        background-color: $--em-background-base;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .project-description {
+        &::before {
+          content: '';
+          display: block;
+          width: 20px;
+          height: 2px;
+          margin-bottom: 3px;
+          background-color: $--em-color-Auxiliary-8;
+        }
+      }
+      .project-url {
+        &::before {
+          content: '';
+          display: block;
+          width: 20px;
+          height: 2px;
+          margin-bottom: 3px;
+          background-color: $--em-color-Auxiliary-10;
+        }
+      }
+      .project-member {
+        img {
+          width: 20px;
+          height: 20px;
+          display: block;
+          border-radius: 4px;
+          margin-right: 12px;
+        }
+      }
+      .project-control {
+        width: 100%;
+        margin-top: 10px;
+        .control-item {
+          width: 33%;
+          &:nth-child(2) {
+            width: 34%;
+          }
+        }
+      }
+    }
   }
 }
 </style>
