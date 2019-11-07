@@ -4,6 +4,10 @@ export function getProjectsApi(type: number = 0, keyword: string = '') {
   return axios.get(`/project/list?type=${type}&keyword=${keyword}`)
 }
 // 克隆项目
+export function createProjectApi(params: any) {
+  return axios.post(`/project/create`, params)
+}
+// 克隆项目
 export function cloneProjectApi(id: string) {
   return axios.put(`/project/clone/${id}`)
 }

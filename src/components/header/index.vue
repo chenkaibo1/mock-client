@@ -36,7 +36,9 @@ export default class EmHeader extends Vue {
   get iconClass() {
     return `fa fa-${this.icon} fa-2x`
   }
-  mounted() {}
+  // get scroll() {
+  //   return this.$store.state.scroll
+  // }
 }
 </script>
 

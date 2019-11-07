@@ -33,8 +33,8 @@
                 type="ghost"
                 icon="el-icon-link"
                 :title="$t('p.project.control[0]')"
-                class="control-item"
-                id="copy-url"
+                class="control-item copy-url"
+                ref="copyUrl"
                 @click.stop="clip(item)"
               ></el-button>
               <el-button
@@ -49,14 +49,14 @@
                 icon="el-icon-delete"
                 class="control-item"
                 :title="$t('p.project.control[2]')"
-                @click.stop="removeModal= {show: true, project: item, inputModel: ''}"
+                @click.stop="clickDelete(item)"
               ></el-button>
             </el-button-group>
           </div>
         </div>
       </div>
     </transition>
-    <el-dialog v-model="removeModal.show" width="360">
+    <el-dialog :visible.sync="removeModal.show" :custom-class="'remove-project-dialog'">
       <p slot="title" style="color:#f60;text-align:center">
         <i class="el-icon-warning"></i>
         <span>{{$t('p.project.modal.delete.title')}}</span>
@@ -70,7 +70,7 @@
         </p>
         <p>{{$tc('p.project.modal.delete.description', 2)}}</p>
         <el-input
-          style="margin-top: 10px;"
+          style="margin-top: 10px"
           v-model="removeModal.inputModel"
           :placeholder="$t('p.project.modal.delete.placeholder')"
         ></el-input>
@@ -81,7 +81,7 @@
           size="large"
           long
           :disabled="removeModal.project.name !== removeModal.inputModel"
-          @click="deleteProject"
+          @click="deleteProject(removeModal.project._id)"
         >{{$t('p.project.modal.delete.button')}}</el-button>
       </div>
     </el-dialog>
@@ -156,7 +156,8 @@ export default class Home extends Vue {
   }
   // 复制项目地址
   clip(project: any) {
-    const clipboard = new Clipboard('#copy-url', {
+    const el = this.$refs.copyUrl as any
+    const clipboard = new Clipboard(el[0].$el, {
       text() {
         return location.origin + '/mock/' + project._id + project.url
       }
@@ -164,7 +165,8 @@ export default class Home extends Vue {
     clipboard.on('success', (e: any) => {
       e.clearSelection()
       clipboard.destroy()
-      this.$message.success(this.$t('p.project.copySuccess') as string)
+      const text = this.$t('p.project.copySuccess') as string
+      this.$message.success(text)
     })
   }
   // 克隆项目
@@ -173,8 +175,13 @@ export default class Home extends Vue {
       this.getProjectList()
     })
   }
+  clickDelete(project: any) {
+    this.removeModal.show = true
+    this.removeModal.project = project
+  }
   deleteProject(id: string) {
     deleteProjectApi(id).then(() => {
+      this.removeModal.show = false
       remove(this.projects, item => {
         return item._id === id
       })
@@ -195,7 +202,7 @@ export default class Home extends Vue {
     display: flex;
     flex-wrap: wrap;
     .project-item {
-      max-width: 225px;
+      width: 225px;
       margin: 20px;
       background-color: $--em-color-white;
       padding: 0 14px 20px 14px;
@@ -263,6 +270,33 @@ export default class Home extends Vue {
         }
       }
     }
+  }
+}
+/deep/ .remove-project-dialog {
+  width: 360px;
+  border-radius: 6px;
+  .el-dialog__header {
+    padding-bottom: 20px;
+    p {
+      font-size: $--em-fontSize14;
+    }
+  }
+  .el-dialog__body {
+    padding: 20px 20px 10px 20px;
+    border-bottom: 1px solid #d9dbe0;
+    p {
+      font-size: $--em-fontSize12;
+      line-height: 18px;
+      color: black;
+    }
+    .el-input__inner {
+      height: 32px;
+    }
+  }
+  .el-button {
+    width: 100%;
+    height: 30px;
+    padding: 0;
   }
 }
 </style>

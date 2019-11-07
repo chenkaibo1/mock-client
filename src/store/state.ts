@@ -1,3 +1,4 @@
 export default {
-  searchValue: ''
+  searchValue: '',
+  scroll: 0
 }

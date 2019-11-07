@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar style="height: 100%" ref="scrollbar">
-    <div class="em-layout" @mousewheel="mousewheel">
+    <div class="em-layout">
       <transition name="fade">
         <div class="nav-wrapper">
           <div class="nav">
@@ -119,18 +119,18 @@ export default class Layout extends Vue {
   get userHeadImg() {
     return JSON.parse(getItem('user')).headImg
   }
+  mounted() {}
   search() {
     this.$store.commit('SET_SEARCH_VALUE', this.searchValue)
   }
   open(url: string) {
     window.open(url)
   }
-  mousewheel(e: Event) {
-    const scrollbar = this.$refs.scrollbar as any
-    console.log(e)
-    console.log(scrollbar.wrap, 'layout')
-    console.log(scrollbar.wrap.scrollTop, 'layout')
-  }
+  // mousewheel(e: Event) {
+  //   const scrollbar = this.$refs.scrollbar as any
+  //   this.$store.commit('SET_SCROLL', scrollbar.wrap.scrollTop)
+  //   console.log(scrollbar)
+  // }
   logOut() {}
 }
 </script>
