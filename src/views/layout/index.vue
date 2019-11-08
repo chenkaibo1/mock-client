@@ -13,6 +13,7 @@
             <el-menu
               class="menu"
               :default-active="activeIndex"
+              router
               mode="horizontal"
               background-color="#495060"
               text-color="#edeef5"

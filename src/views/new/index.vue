@@ -227,7 +227,7 @@ export default class EmNew extends Vue {
   getProjectOwner() {
     getUserCreateGroupsApi().then((res: any) => {
       if (res.data && res.data.length) {
-        this.projectOwners = [...res.date, this.user]
+        this.projectOwners = res.data.concat(this.user)
       } else {
         this.projectOwners.push(this.user)
       }
@@ -250,7 +250,6 @@ export default class EmNew extends Vue {
     const projectFormEl = this.$refs.projectForm as any
     projectFormEl.validate((valid: boolean) => {
       if (valid) {
-        debugger
         const data: any = {
           name: this.formData.projectName,
           swagger_url: this.formData.projectSwagger,

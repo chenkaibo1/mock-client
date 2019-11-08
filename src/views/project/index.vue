@@ -1,12 +1,16 @@
 <template>
   <div class="em-home">
     <em-add @click.native="$router.push('/new')"></em-add>
+    <em-placeholder :show="!projects.length">
+      <i :class="['fa',  'fa-3x', {'fa-smile-o': !keyword} , {'fa-meh-o': keyword}]"></i>
+      <p>{{keyword ? $t('p.project.placeholder[3]') : pageHeader.placeholder}}</p>
+    </em-placeholder>
     <em-header
       :icon="pageHeader.icon"
       :title="pageHeader.title"
       :description="pageHeader.description"
     >
-      <el-radio-group v-model="btnValue" @change="getProjectList">
+      <el-radio-group v-model="btnValue" @change="getProjectList" v-if="!groupName">
         <el-radio-button :label="$t('p.project.filter[0]')"></el-radio-button>
         <el-radio-button :label="$t('p.project.filter[1]')"></el-radio-button>
         <el-radio-button :label="$t('p.project.filter[2]')"></el-radio-button>
@@ -16,14 +20,14 @@
       <div class="project-list">
         <div v-for="item in projects" :key="item._id">
           <!-- 检查 user.id 防止闪烁 -->
-          <div class="project-item">
+          <div :class="['project-item',{'is-group': groupName}]">
             <div class="project-collect">
               <transition name="zoom" mode="out-in">
-                <i class="el-icon-star-off"></i>
+                <i :class="groupName? 'fa fa-certificate' : 'el-icon-star-off'"></i>
               </transition>
             </div>
             <h2>{{item.name}}</h2>
-            <div class="project-description item-common">{{item.description}}</div>
+            <div class="project-description item-common">{{item.description || emptyDesc}}</div>
             <div class="project-url item-common">{{item.url}}</div>
             <div class="project-member item-common">
               <img :src="item.user.headImg" />
@@ -35,12 +39,14 @@
                 :title="$t('p.project.control[0]')"
                 class="control-item copy-url"
                 ref="copyUrl"
+                size="small"
                 @click.stop="clip(item)"
               ></el-button>
               <el-button
                 type="ghost"
                 icon="el-icon-copy-document"
                 class="control-item"
+                size="small"
                 :title="$t('p.project.control[1]')"
                 @click.stop="cloneProject(item._id)"
               ></el-button>
@@ -48,6 +54,7 @@
                 type="ghost"
                 icon="el-icon-delete"
                 class="control-item"
+                size="small"
                 :title="$t('p.project.control[2]')"
                 @click.stop="clickDelete(item)"
               ></el-button>
@@ -92,16 +99,18 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 // @ts-ignore
 import Clipboard from 'clipboard'
-import { getProjectsApi, cloneProjectApi, deleteProjectApi } from '@/api/project'
+import { getProjectsApi, cloneProjectApi, deleteProjectApi, getGroupProjectsApi } from '@/api/project'
 import { remove } from 'lodash'
 @Component
-export default class Home extends Vue {
+export default class Project extends Vue {
   btnValue: string = '全部'
   typeMap: any = {
     全部: 0,
     我创建的: 1,
     我加入的: 2
   }
+  groupName: string = ''
+  emptyDesc: string = ''
   projects: any[] = []
   removeModal: any = {
     show: false,
@@ -110,8 +119,8 @@ export default class Home extends Vue {
   }
   get pageHeader() {
     const route = this.$route
-    switch (route.fullPath) {
-      case '/workbench':
+    switch (route.query.type) {
+      case 'workbench':
         return {
           title: this.$t('p.project.header.title[2]'),
           description: this.$t('p.project.header.description[2]'),
@@ -119,21 +128,22 @@ export default class Home extends Vue {
           icon: 'user',
           type: 2 // 0.个人项目 1.团队项目 2.工作台
         }
-      case '/':
+      case 'group':
+        const groupName = (route.query && route.query.name) || ''
         return {
-          title: this.$t('p.project.header.title[0]'),
-          description: this.$t('p.project.header.description[0]'),
-          placeholder: this.$t('p.project.placeholder[0]'),
-          icon: 'user',
-          type: 0
+          title: this.$t('p.project.header.title[1]', { groupName }),
+          description: this.$t('p.project.header.description[1]', { groupName }),
+          placeholder: this.$t('p.project.placeholder[1]'),
+          icon: 'users',
+          type: 1
         }
       default:
         return {
           title: this.$t('p.project.header.title[0]'),
           description: this.$t('p.project.header.description[0]'),
           placeholder: this.$t('p.project.placeholder[0]'),
-          icon: 'users',
-          type: 1
+          icon: 'user',
+          type: 0
         }
     }
   }
@@ -142,15 +152,27 @@ export default class Home extends Vue {
   }
   @Watch('keyword')
   keywordChange(val: string) {
-    getProjectsApi(this.typeMap[this.btnValue], val).then(res => {
-      this.projects = res.data
-    })
+    !this.groupName &&
+      getProjectsApi(this.typeMap[this.btnValue], val).then(res => {
+        this.projects = res.data
+      })
   }
   mounted() {
-    this.getProjectList()
+    this.emptyDesc = this.$t('p.project.emptyDesc') as string
+    this.groupName = this.$route.query.name as string
+    if (this.groupName) {
+      this.getGroupProjectList()
+    } else {
+      this.getProjectList()
+    }
   }
   getProjectList() {
     getProjectsApi(this.typeMap[this.btnValue]).then(res => {
+      this.projects = res.data
+    })
+  }
+  getGroupProjectList() {
+    getGroupProjectsApi(this.groupName).then(res => {
       this.projects = res.data
     })
   }
@@ -210,11 +232,13 @@ export default class Home extends Vue {
       border-radius: 4px;
       transition: all 0.3s;
       position: relative;
+      overflow: hidden;
       cursor: pointer;
       .project-collect {
         text-align: center;
         font-size: 26px;
         color: $--em-color-Auxiliary-10;
+        margin: 10px 0;
       }
       h2 {
         font-weight: 700;
@@ -269,6 +293,9 @@ export default class Home extends Vue {
           }
         }
       }
+    }
+    .is-group {
+      background-color: $--em-color-Auxiliary-8;
     }
   }
 }

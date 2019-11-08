@@ -155,6 +155,7 @@ export default {
           'Add projects to Work Station for faster access.'
         ]
       },
+      emptyDesc: 'no description',
       placeholder: [
         "Wanna finish work faster? Let's Mock up。",
         'Team Project is perfect for cooperation.',
