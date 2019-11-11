@@ -38,6 +38,11 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "home" */ '@/views/project/index.vue')
         },
         {
+          path: '/project/:id',
+          name: 'projectDetail',
+          component: () => import(/* webpackChunkName: "projectDetail" */ '@/views/projectDetail/index.vue')
+        },
+        {
           path: '/new',
           name: 'new',
           component: () => import(/* webpackChunkName: "new" */ '@/views/new/index.vue')

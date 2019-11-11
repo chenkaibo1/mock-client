@@ -17,7 +17,7 @@
           <!-- 检查 user.id 防止闪烁 -->
           <div
             class="group-item"
-            @click="$router.push({path: '/', query: {type:'group',name: item.name}})"
+            @click="$router.push({path: '/', query: {type:'group',name: item.name,id: item._id}})"
           >
             <div class="group-collect">
               <transition name="zoom" mode="out-in">

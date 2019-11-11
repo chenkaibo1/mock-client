@@ -19,6 +19,11 @@
         <slot></slot>
       </el-col>
     </el-row>
+    <div class="header-nav">
+      <div class="nav-wrapper">
+        <slot name="nav"></slot>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -78,6 +83,19 @@ export default class EmHeader extends Vue {
         color: $--em-color-text-Level-3;
         font-weight: 400;
       }
+    }
+  }
+  .header-nav {
+    position: absolute;
+    bottom: -1px;
+    width: 100%;
+    font-size: 13px;
+    .nav-wrapper {
+      max-width: $--em-maxWidth;
+      overflow: hidden;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row-reverse;
     }
   }
 }

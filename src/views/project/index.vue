@@ -20,7 +20,10 @@
       <div class="project-list">
         <div v-for="item in projects" :key="item._id">
           <!-- 检查 user.id 防止闪烁 -->
-          <div :class="['project-item',{'is-group': groupName}]">
+          <div
+            :class="['project-item',{'is-group': groupName}]"
+            @click.stop="$router.push(`/project/${item._id}`)"
+          >
             <div class="project-collect">
               <transition name="zoom" mode="out-in">
                 <i :class="groupName? 'fa fa-certificate' : 'el-icon-star-off'"></i>
@@ -157,6 +160,15 @@ export default class Project extends Vue {
         this.projects = res.data
       })
   }
+  @Watch('$route')
+  routeChange() {
+    this.groupName = this.$route.query.name as string
+    if (this.groupName) {
+      this.getGroupProjectList()
+    } else {
+      this.getProjectList()
+    }
+  }
   mounted() {
     this.emptyDesc = this.$t('p.project.emptyDesc') as string
     this.groupName = this.$route.query.name as string
@@ -172,7 +184,7 @@ export default class Project extends Vue {
     })
   }
   getGroupProjectList() {
-    getGroupProjectsApi(this.groupName).then(res => {
+    getGroupProjectsApi(this.$route.query.id as string).then(res => {
       this.projects = res.data
     })
   }
