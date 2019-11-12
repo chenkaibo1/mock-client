@@ -1,3 +1,4 @@
+@import './variable.scss';
 .scrollbar-wrap {
   max-height: 715px;
 }
@@ -5,5 +6,15 @@
   .span {
     cursor: pointer;
     margin: 0 10px;
+  }
+}
+.em-container {
+  max-width: $--em-maxWidth;
+  margin: 0 auto;
+}
+@media screen and (max-width: 1280px) {
+  .em-container {
+    max-width: $--em-maxWidth2;
+    margin: 0 auto;
   }
 }

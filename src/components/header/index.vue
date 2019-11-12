@@ -49,6 +49,7 @@ export default class EmHeader extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/variable.scss';
+@import '@/assets/scss/common.scss';
 .em-header {
   overflow: hidden;
   width: 100%;
@@ -56,9 +57,8 @@ export default class EmHeader extends Vue {
   height: 110px;
   padding: 30px 0;
   .header {
-    max-width: $--em-maxWidth;
+    @extend .em-container;
     overflow: hidden;
-    margin: 0 auto;
     display: flex;
     align-items: center;
     .header-logo {
