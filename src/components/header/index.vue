@@ -3,7 +3,7 @@
     <transition name="fade">
       <em-spots></em-spots>
     </transition>
-    <el-row class="header">
+    <el-row class="header em-container">
       <el-col :span="2" class="header-logo">
         <i :class="iconClass"></i>
       </el-col>
@@ -20,7 +20,7 @@
       </el-col>
     </el-row>
     <div class="header-nav">
-      <div class="nav-wrapper">
+      <div class="nav-wrapper em-container">
         <slot name="nav"></slot>
       </div>
     </div>
@@ -49,7 +49,6 @@ export default class EmHeader extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/variable.scss';
-@import '@/assets/scss/common.scss';
 .em-header {
   overflow: hidden;
   width: 100%;
@@ -57,7 +56,6 @@ export default class EmHeader extends Vue {
   height: 110px;
   padding: 30px 0;
   .header {
-    @extend .em-container;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -91,8 +89,6 @@ export default class EmHeader extends Vue {
     width: 100%;
     font-size: 13px;
     .nav-wrapper {
-      max-width: $--em-maxWidth;
-      overflow: hidden;
       margin: 0 auto;
       display: flex;
       flex-direction: row-reverse;

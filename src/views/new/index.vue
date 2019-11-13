@@ -6,7 +6,7 @@
       :description="$t('p.new.header.description')"
     ></em-header>
     <transition name="fade">
-      <div class="new-project-wrapper">
+      <div class="new-project-wrapper em-container">
         <el-form
           class="project-form"
           :rules="rules"
@@ -274,8 +274,7 @@ export default class EmNew extends Vue {
   background-color: $--em-background-base;
   overflow: hidden;
   .new-project-wrapper {
-    max-width: $--em-maxWidth;
-    margin: 20px auto;
+    margin: 20px auto !important;
     display: flex;
     justify-content: center;
     background-color: $--em-color-white;

@@ -4,7 +4,7 @@ export function getProjectsApi(type: number = 0, keyword: string = '') {
   return axios.get(`/project/list?type=${type}&keyword=${keyword}`)
 }
 // 获取项目列表
-export function getProjectDetail(id: string) {
+export function getProjectDetailApi(id: string) {
   return axios.get(`/project/${id}`)
 }
 // 获取团队项目列表

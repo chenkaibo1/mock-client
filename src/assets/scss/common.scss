@@ -12,9 +12,77 @@
   max-width: $--em-maxWidth;
   margin: 0 auto;
 }
-@media screen and (max-width: 1280px) {
+@media only screen and (max-width: 1919px) {
   .em-container {
     max-width: $--em-maxWidth2;
     margin: 0 auto;
   }
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// color
+.color-primary {
+  color: $--em-color-primary;
+}
+.color-white {
+  color: $--em-color-white;
+}
+.color-black {
+  color: $--em-color-black;
+}
+.color-red {
+  color: $--em-color-Auxiliary-3;
+}
+.color-grey {
+  color: $--em-color-Auxiliary-4;
+}
+.color-yellow {
+  color: $--em-color-Auxiliary-2;
+}
+.color-green {
+  color: $--em-color-Auxiliary-5;
+}
+.color-lightgreen {
+  color: $--em-color-Auxiliary-6;
+}
+.color-orange {
+  color: $--em-color-Auxiliary-2;
+}
+.color-blue {
+  color: $--em-color-Auxiliary-8;
+}
+// background-color
+.background-color-primary {
+  background-color: $--em-color-primary;
+}
+.background-color-white {
+  background-color: $--em-color-white;
+}
+.background-color-black {
+  background-color: $--em-color-black;
+}
+.background-color-red {
+  background-color: $--em-color-Auxiliary-3;
+}
+.background-color-grey {
+  background-color: $--em-color-Auxiliary-4;
+}
+.background-color-yellow {
+  background-color: $--em-color-Auxiliary-2;
+}
+.background-color-green {
+  background-color: $--em-color-Auxiliary-5;
+}
+.background-color-lightgreen {
+  background-color: $--em-color-Auxiliary-6;
+}
+.background-color-orange {
+  background-color: $--em-color-Auxiliary-2;
+}
+.background-color-blue {
+  background-color: $--em-color-Auxiliary-8;
 }

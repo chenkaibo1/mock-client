@@ -3,7 +3,7 @@
     <div class="em-layout">
       <transition name="fade">
         <div class="nav-wrapper">
-          <div class="nav">
+          <div class="nav em-container">
             <div class="nav-logo" @click="$router.push('/')">
               <img src="/images/easy-mock.png" />
             </div>
@@ -148,10 +148,8 @@ export default class Layout extends Vue {
       /deep/ .el-menu.el-menu--horizontal {
         border-bottom: none;
       }
-      max-width: $--em-maxWidth;
       display: flex;
       align-items: center;
-      margin: 0 auto;
       .nav-logo {
         flex: 2;
         margin-left: $--em-padding;

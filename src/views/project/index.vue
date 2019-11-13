@@ -17,7 +17,7 @@
       </el-radio-group>
     </em-header>
     <transition name="fade">
-      <div class="project-list">
+      <div class="project-list em-container">
         <div v-for="item in projects" :key="item._id">
           <!-- 检查 user.id 防止闪烁 -->
           <div
@@ -230,9 +230,7 @@ export default class Project extends Vue {
   width: 100%;
   height: 100%;
   .project-list {
-    max-width: $--em-maxWidth;
     overflow: hidden;
-    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     .project-item {

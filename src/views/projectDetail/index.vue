@@ -14,7 +14,7 @@
       </ul>
     </em-header>
     <transition name="fade">
-      <div class="content">
+      <div class="content em-container">
         <div class="api-list" v-if="activeNav === 'apiList'">
           <div class="project-info">
             <el-row>
@@ -69,8 +69,60 @@
               </el-col>
             </el-row>
           </div>
-          <el-table border :data="project.mocks" :highlight-row="true">
-            <el-table-column type="expand"></el-table-column>
+          <el-table border :data="mocks" :highlight-row="true" header-row-class-name="table-header">
+            <el-table-column type="expand" align="center">
+              <template slot-scope="scope">
+                <div class="table-expand">
+                  <h2>Method</h2>
+                  <p>{{scope.row.method}}</p>
+                  <h2>URL</h2>
+                  <p>{{scope.row.url}}</p>
+                  <h2>{{$t('p.detail.expand.description')}}</h2>
+                  <p>{{scope.row.description}}</p>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column type="selection" align="center"></el-table-column>
+            <el-table-column
+              label="Method"
+              prop="method"
+              :filters="tableMethodFilters"
+              :filter-method="tableMethodFilterHandle"
+              min-width="100px"
+            >
+              <template slot-scope="scope">
+                <div :class="['table-method',methodColor[scope.row.method]]">{{scope.row.method}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="URL" prop="url" sortable min-width="300px"></el-table-column>
+            <el-table-column label="描述" min-width="260px">
+              <template slot-scope="scope">
+                <span class="ellipsis">{{scope.row.description}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" min-width="160px" align="center">
+              <template>
+                <div class="options">
+                  <el-button-group>
+                    <el-button size="small" :title="$t('p.detail.action[0]')">
+                      <i class="fa fa-eye color-green"></i>
+                    </el-button>
+                    <el-button size="small" :title="$t('p.detail.action[1]')">
+                      <i class="fa fa-edit color-primary"></i>
+                    </el-button>
+                    <el-button size="small" :title="$t('p.detail.action[2]')">
+                      <i class="fa fa-link color-blue"></i>
+                    </el-button>
+                    <el-button size="small" :title="$t('p.detail.action[3]')">
+                      <i class="fa fa-copy color-yellow"></i>
+                    </el-button>
+                    <el-button size="small" :title="$t('p.detail.action[4]')">
+                      <i class="fa fa-trash color-red"></i>
+                    </el-button>
+                  </el-button-group>
+                </div>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
         <div class="edit-project" v-if="activeNav === 'setting'"></div>
@@ -83,7 +135,8 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 // @ts-ignore
 import Clipboard from 'clipboard'
-import { getProjectDetail } from '@/api/project'
+import { getProjectDetailApi } from '@/api/project'
+import { getMockListApi } from '@/api/mock'
 import { remove } from 'lodash'
 @Component
 export default class ProjectDetail extends Vue {
@@ -92,7 +145,22 @@ export default class ProjectDetail extends Vue {
     user: {},
     members: []
   }
+  mocks: any[] = []
   group: any = ''
+  tableMethodFilters: any[] = [
+    { label: 'get', value: 'get' },
+    { label: 'post', value: 'post' },
+    { label: 'put', value: 'put' },
+    { label: 'delete', value: 'delete' },
+    { label: 'patch', value: 'patch' }
+  ]
+  methodColor: object = {
+    get: 'background-color-blue',
+    post: 'background-color-green',
+    delete: 'background-color-red',
+    put: 'background-color-yellow',
+    patch: 'background-color-orange'
+  }
   get pageHeader() {
     return {
       description: this.$t('p.project.header.description[0]'),
@@ -109,9 +177,15 @@ export default class ProjectDetail extends Vue {
     return this.project.url === '/' ? baseUrl : baseUrl + this.project.url
   }
   mounted() {
-    getProjectDetail(this.$route.params.id).then(res => {
+    getProjectDetailApi(this.$route.params.id).then(res => {
       this.project = res.data
+      getMockListApi(this.$route.params.id).then(res => {
+        this.mocks = res.data
+      })
     })
+  }
+  tableMethodFilterHandle(value: string, row: any) {
+    return row.method.indexOf(value) > -1
   }
 }
 </script>
@@ -143,8 +217,7 @@ export default class ProjectDetail extends Vue {
     }
   }
   .content {
-    max-width: $--em-maxWidth;
-    margin: 0 auto;
+    margin-bottom: 20px;
     .api-list {
       width: 100%;
       .project-info {
@@ -213,8 +286,8 @@ export default class ProjectDetail extends Vue {
       .project-switcher {
         border-radius: 4px;
         margin-bottom: 20px;
-        color: #fff;
-        box-shadow: 0 2px 3px #bbb;
+        color: $--em-color-white;
+        box-shadow: 0 2px 3px $--em-color-shadow;
         font-size: 13px;
         ul {
           width: 100%;
@@ -232,9 +305,52 @@ export default class ProjectDetail extends Vue {
             &:first-child {
               border-radius: 5px 0 0 5px;
             }
+            &:hover {
+              background: #364166;
+            }
           }
         }
       }
+      .options {
+        /deep/ .el-button-group {
+          text-align: center;
+          .el-button {
+            width: 30px;
+            padding: 5px 0;
+          }
+        }
+      }
+    }
+  }
+  /deep/ .table-header {
+    color: $--em-color-black;
+  }
+  .table-method {
+    width: 70%;
+    margin: 0 auto;
+    color: $--em-color-white;
+    text-align: center;
+    border-radius: $--em-borderRadius44;
+  }
+  .table-expand {
+    background: $--em-color-white;
+    border-radius: $--em-borderRadius44;
+    box-shadow: 0 1px 5px $--em-color-shadow;
+    padding: 20px;
+
+    h2 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    p {
+      margin-top: 6px;
+      margin-bottom: 10px;
+      background: #41444e;
+      color: $--em-color-white;
+      padding: 6px;
+      border-radius: 4px;
+      font-size: 13px;
     }
   }
 }

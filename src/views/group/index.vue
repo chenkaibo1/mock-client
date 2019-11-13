@@ -12,7 +12,7 @@
       :description="$t('p.group.header.description')"
     ></em-header>
     <transition name="fade">
-      <div class="group-list">
+      <div class="group-list em-container">
         <div v-for="item in groups" :key="item._id">
           <!-- 检查 user.id 防止闪烁 -->
           <div
@@ -179,9 +179,7 @@ export default class Group extends Vue {
   width: 100%;
   height: 100%;
   .group-list {
-    max-width: $--em-maxWidth;
     overflow: hidden;
-    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     .group-item {
