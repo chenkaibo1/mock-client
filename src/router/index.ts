@@ -51,6 +51,11 @@ const router = new Router({
           path: '/group',
           name: 'group',
           component: () => import(/* webpackChunkName: "group" */ '@/views/group/index.vue')
+        },
+        {
+          path: '/editor',
+          name: 'editor',
+          component: () => import(/* webpackChunkName: "editor" */ '@/views/editor/index.vue')
         }
       ]
     },

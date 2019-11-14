@@ -1,45 +1,46 @@
 <template>
   <div class="em-editor">
-    <div class="em-editor__editor">
-      <div ref="codeEditor"></div>
+    <div class="editor-wrapper">
+      <div ref="codeEditor" class="code-editor"></div>
     </div>
-    <div class="panel-info">
-      <em-spots :size="10"></em-spots>
-      <div class="wrapper">
+    <div class="panel-wrapper">
+      <div class="panel-info">
+        <em-spots :size="10"></em-spots>
         <h2>{{isEdit ? $t('p.detail.editor.title[0]') : $t('p.detail.editor.title[1]')}}</h2>
-        <div class="em-editor__form">
-          <Form label-position="top">
-            <Form-item label="Method">
-              <i-select v-model="temp.method">
-                <Option
+        <div class="editor-form">
+          <el-form label-position="top">
+            <el-form-item label="Method">
+              <el-select v-model="temp.method" size="small">
+                <el-option
                   v-for="item in methods"
                   :value="item.value"
                   :key="item.value"
-                >{{ item.label }}</Option>
-              </i-select>
-            </Form-item>
-            <Form-item label="URL">
-              <i-input v-model="temp.url">
+                  :label="item.label"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="URL">
+              <el-input v-model="temp.url" size="small">
                 <span slot="prepend">/</span>
-              </i-input>
-            </Form-item>
-            <Form-item :label="$t('p.detail.columns[0]')">
-              <i-input v-model="temp.description"></i-input>
-            </Form-item>
-            <Form-item :label="$t('p.detail.editor.autoClose')" v-if="isEdit">
-              <i-switch v-model="autoClose"></i-switch>
-            </Form-item>
-            <Form-item>
-              <Button
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('p.detail.columns[0]')">
+              <el-input v-model="temp.description" size="small"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('p.detail.editor.autoClose')" v-if="isEdit">
+              <el-switch v-model="autoClose" size="small"></el-switch>
+            </el-form-item>
+            <el-form-item>
+              <el-button
                 type="primary"
-                long
+                size="small"
                 @click="submit"
-              >{{isEdit ? $t('p.detail.editor.action[0]') : $t('p.detail.editor.action[1]')}}</Button>
-            </Form-item>
-          </Form>
+              >{{isEdit ? $t('p.detail.editor.action[0]') : $t('p.detail.editor.action[1]')}}</el-button>
+            </el-form-item>
+          </el-form>
         </div>
-        <div class="em-editor__control">
-          <div class="em-proj-detail__switcher">
+        <div class="editor-control">
+          <div class="switcher">
             <ul>
               <li @click="format">{{$t('p.detail.editor.control[0]')}}</li>
               <li @click="preview" v-if="isEdit">{{$t('p.detail.editor.control[1]')}}</li>
@@ -52,58 +53,59 @@
   </div>
 </template>
 
-<script>
-import * as api from '../../api'
-import jsBeautify from 'js-beautify/js/lib/beautify'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 import * as ace from 'brace'
-
-export default {
-  name: 'editor',
-  data() {
-    return {
-      codeEditor: null,
-      autoClose: true,
-      methods: [
-        { label: 'get', value: 'get' },
-        { label: 'post', value: 'post' },
-        { label: 'put', value: 'put' },
-        { label: 'delete', value: 'delete' },
-        { label: 'patch', value: 'patch' }
-      ],
-      temp: {
-        url: '',
-        mode: '{"data": {}}',
-        method: 'get',
-        description: ''
-      }
-    }
-  },
-  computed: {
-    mockData() {
-      return this.$store.state.mock.editorData.mock
-    },
-    baseUrl() {
-      return this.$store.state.mock.editorData.baseUrl
-    },
-    projectId() {
-      return this.$route.params.projectId
-    },
-    isEdit() {
-      return !!this.$route.params.id && this.mockData
-    }
-  },
-  beforeRouteEnter(to, from, next) {
-    if (from.matched.length === 0) {
-      // 防止编辑页刷新导致的显示异常（直接进入项目主页）
-      return next({
-        path: `/project/${to.params.projectId}`,
-        replace: true
-      })
-    }
-    next()
-  },
+import 'brace/mode/javascript'
+import 'brace/theme/monokai'
+import 'brace/ext/language_tools'
+import 'brace/ext/searchbox'
+// @ts-ignore
+import jsBeautify from 'js-beautify/js/lib/beautify'
+@Component({
+  // beforeRouteEnter(to, from, next) {
+  //   if (from.matched.length === 0) {
+  //     // 防止编辑页刷新导致的显示异常（直接进入项目主页）
+  //     return next({
+  //       path: `/project/${to.params.projectId}`,
+  //       replace: true
+  //     })
+  //   }
+  //   next()
+  // }
+})
+export default class Editor extends Vue {
+  codeEditor: any = null
+  autoClose: boolean = true
+  methods: any[] = [
+    { label: 'get', value: 'get' },
+    { label: 'post', value: 'post' },
+    { label: 'put', value: 'put' },
+    { label: 'delete', value: 'delete' },
+    { label: 'patch', value: 'patch' }
+  ]
+  baseUrl: string = ''
+  temp: any = {
+    url: '',
+    mode: '{"data": {}}',
+    method: 'get',
+    description: ''
+  }
+  get mockData() {
+    return this.$store.state.mockData
+  }
+  // get baseUrl() {
+  //   const baseUrl = location.origin + '/mock/' + this.project._id
+  //   return this.project.url === '/' ? baseUrl : baseUrl + this.project.url
+  // }
+  get projectId() {
+    return this.$route.query.pid
+  }
+  get isEdit() {
+    return this.$route.query.type === 'edit'
+  }
   mounted() {
-    this.codeEditor = ace.edit(this.$refs.codeEditor)
+    this.codeEditor = ace.edit(this.$refs.codeEditor as any)
     this.codeEditor.getSession().setMode('ace/mode/javascript')
     this.codeEditor.setTheme('ace/theme/monokai')
     this.codeEditor.setOption('tabSize', 2)
@@ -123,7 +125,7 @@ export default {
 
     if (this.isEdit) {
       this.autoClose = true
-      this.temp.url = this.mockData.url.slice(1) // remove /
+      this.temp.url = this.mockData.url // remove /
       this.temp.mode = this.mockData.mode
       this.temp.method = this.mockData.method
       this.temp.description = this.mockData.description
@@ -133,77 +135,148 @@ export default {
       this.codeEditor.setValue(this.temp.mode)
       this.format()
     })
-  },
-  methods: {
-    convertUrl(url) {
-      const newUrl = '/' + url
-      return newUrl === '/' ? '/' : newUrl.replace(/\/\//g, '/').replace(/\/$/, '')
-    },
-    format() {
-      const context = this.codeEditor.getValue()
-      let code = /^http(s)?/.test(context) ? context : jsBeautify.js_beautify(context, { indent_size: 2 })
-      this.codeEditor.setValue(code)
-    },
-    onChange() {
-      this.temp.mode = this.codeEditor.getValue()
-    },
-    close() {
-      this.$store.commit('mock/SET_EDITOR_DATA', { mock: null, baseUrl: '' })
-      this.$router.replace(`/project/${this.projectId}`)
-    },
-    submit() {
-      const mockUrl = this.convertUrl(this.temp.url)
+  }
+  convertUrl(url: string) {
+    const newUrl = '/' + url
+    return newUrl === '/' ? '/' : newUrl.replace(/\/\//g, '/').replace(/\/$/, '')
+  }
+  format() {
+    const context = this.codeEditor.getValue()
+    let code = /^http(s)?/.test(context) ? context : jsBeautify.js_beautify(context, { indent_size: 2 })
+    this.codeEditor.setValue(code)
+  }
+  onChange() {
+    this.temp.mode = this.codeEditor.getValue()
+  }
+  close() {
+    this.$store.commit('mock/SET_EDITOR_DATA', { mock: null, baseUrl: '' })
+    this.$router.replace(`/project/${this.projectId}`)
+  }
+  submit() {
+    const mockUrl = this.convertUrl(this.temp.url)
 
-      try {
-        const value = new Function(`return ${this.temp.mode}`)() // eslint-disable-line
-        if (!value) {
-          this.$Message.error(this.$t('p.detail.editor.submit.error[0]'))
-          return
-        } else if (typeof value !== 'object') {
-          throw new Error()
-        }
-      } catch (error) {
-        if (!/^http(s)?:\/\//.test(this.temp.mode)) {
-          this.$Message.error(error.message || this.$t('p.detail.editor.submit.error[1]'))
-          return
-        }
+    try {
+      const value = new Function(`return ${this.temp.mode}`)() // eslint-disable-line
+      if (!value) {
+        this.$message.error(this.$t('p.detail.editor.submit.error[0]') as string)
+        return
+      } else if (typeof value !== 'object') {
+        throw new Error()
       }
-
-      if (this.isEdit) {
-        api.mock
-          .update({
-            data: {
-              ...this.temp,
-              id: this.mockData._id,
-              url: mockUrl
-            }
-          })
-          .then(res => {
-            if (res.data.success) {
-              this.$Message.success(this.$t('p.detail.editor.submit.updateSuccess'))
-              if (this.autoClose) this.close()
-            }
-          })
-      } else {
-        api.mock
-          .create({
-            data: {
-              ...this.temp,
-              url: mockUrl,
-              project_id: this.projectId
-            }
-          })
-          .then(res => {
-            if (res.data.success) {
-              this.$Message.success(this.$t('p.detail.create.success'))
-              this.close()
-            }
-          })
+    } catch (error) {
+      if (!/^http(s)?:\/\//.test(this.temp.mode)) {
+        this.$message.error(error.message || this.$t('p.detail.editor.submit.error[1]'))
+        return
       }
-    },
-    preview() {
-      window.open(this.baseUrl + this.mockData.url + '#!method=' + this.mockData.method)
     }
+    if (this.isEdit) {
+    } else {
+    }
+  }
+  preview() {
+    window.open(this.baseUrl + this.mockData.url + '#!method=' + this.mockData.method)
   }
 }
 </script>
+<style lang="scss" scoped>
+@import '@/assets/scss/variable.scss';
+.em-editor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  overflow: hidden;
+  .editor-wrapper {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+    .code-editor {
+      height: 100%;
+    }
+  }
+  .panel-wrapper {
+    height: 100%;
+    flex: 0 0 350px;
+    overflow: hidden;
+    align-items: center;
+    background: $--em-color-primary;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 3px #000;
+    .panel-info {
+      h2 {
+        width: 100%;
+        color: #fff;
+        font-size: 13px;
+        text-align: center;
+        padding: 6px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 30px;
+        margin-bottom: 20px;
+      }
+      .editor-form {
+        padding: 20px 20px 1px;
+        background: #fff;
+        box-shadow: 0 2px 3px #777;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        /deep/ .el-form {
+          .el-select {
+            width: 100%;
+          }
+          .el-form-item {
+            margin-bottom: 0;
+            &:last-child {
+              margin-bottom: 20px;
+            }
+            .el-form-item__label {
+              height: 30px;
+              line-height: 30px;
+            }
+            .el-button {
+              width: 100%;
+            }
+          }
+        }
+      }
+      .editor-control {
+        .switcher {
+          border-radius: 4px;
+          margin-bottom: 20px;
+          color: $--em-color-white;
+          box-shadow: 0 2px 3px $--em-color-shadow;
+          font-size: 13px;
+          ul {
+            width: 100%;
+            display: flex;
+            li {
+              background: #252d47;
+              padding: 15px 0;
+              flex: 1;
+              text-align: center;
+              cursor: pointer;
+              transition: all 0.3s;
+              &:last-child {
+                border-radius: 0 5px 5px 0;
+              }
+              &:first-child {
+                border-radius: 5px 0 0 5px;
+              }
+              &:hover {
+                background: #364166;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

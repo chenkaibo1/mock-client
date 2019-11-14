@@ -101,13 +101,17 @@
               </template>
             </el-table-column>
             <el-table-column label="操作" min-width="160px" align="center">
-              <template>
+              <template slot-scope="scope">
                 <div class="options">
                   <el-button-group>
                     <el-button size="small" :title="$t('p.detail.action[0]')">
                       <i class="fa fa-eye color-green"></i>
                     </el-button>
-                    <el-button size="small" :title="$t('p.detail.action[1]')">
+                    <el-button
+                      size="small"
+                      :title="$t('p.detail.action[1]')"
+                      @click="openEditor(scope.row)"
+                    >
                       <i class="fa fa-edit color-primary"></i>
                     </el-button>
                     <el-button size="small" :title="$t('p.detail.action[2]')">
@@ -186,6 +190,13 @@ export default class ProjectDetail extends Vue {
   }
   tableMethodFilterHandle(value: string, row: any) {
     return row.method.indexOf(value) > -1
+  }
+  openEditor(row?: any) {
+    if (row) {
+      this.$router.push(`/editor?type=edit&id=${row._id}`)
+    } else {
+      this.$router.push(`/editor?type=create&pid=${this.project._id}`)
+    }
   }
 }
 </script>
