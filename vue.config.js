@@ -4,7 +4,12 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     port: process.env.NODE_ENV === 'test' ? '8090' : '9090',
-    proxy: 'http://localhost:20000'
+    proxy: {
+      '/api': {
+        target: 'http://localhost:20000',
+        changeOrigin: true
+      }
+    }
   },
   configureWebpack: (config) => {
     // for (let i = 0; i < config.rules.module.length; i++) {

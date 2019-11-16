@@ -62,18 +62,12 @@ import 'brace/ext/language_tools'
 import 'brace/ext/searchbox'
 // @ts-ignore
 import jsBeautify from 'js-beautify/js/lib/beautify'
-@Component({
-  // beforeRouteEnter(to, from, next) {
-  //   if (from.matched.length === 0) {
-  //     // 防止编辑页刷新导致的显示异常（直接进入项目主页）
-  //     return next({
-  //       path: `/project/${to.params.projectId}`,
-  //       replace: true
-  //     })
-  //   }
-  //   next()
-  // }
-})
+import { getMockDetailApi } from '@/api/mock'
+import { getProjectDetailApi } from '@/api/project'
+// const { snippetManager } = ace.acequire('ace/snippets')
+// import snippetText from './snippets'
+// snippetManager.parseSnippetFile(snippetText, 'javascript')
+@Component
 export default class Editor extends Vue {
   codeEditor: any = null
   autoClose: boolean = true
@@ -85,26 +79,18 @@ export default class Editor extends Vue {
     { label: 'patch', value: 'patch' }
   ]
   baseUrl: string = ''
+  mockData: any = {}
+  project: any = {}
   temp: any = {
     url: '',
     mode: '{"data": {}}',
     method: 'get',
     description: ''
   }
-  get mockData() {
-    return this.$store.state.mockData
-  }
-  // get baseUrl() {
-  //   const baseUrl = location.origin + '/mock/' + this.project._id
-  //   return this.project.url === '/' ? baseUrl : baseUrl + this.project.url
-  // }
-  get projectId() {
-    return this.$route.query.pid
-  }
   get isEdit() {
     return this.$route.query.type === 'edit'
   }
-  mounted() {
+  async mounted() {
     this.codeEditor = ace.edit(this.$refs.codeEditor as any)
     this.codeEditor.getSession().setMode('ace/mode/javascript')
     this.codeEditor.setTheme('ace/theme/monokai')
@@ -112,6 +98,8 @@ export default class Editor extends Vue {
     this.codeEditor.setOption('fontSize', 15)
     this.codeEditor.setOption('enableLiveAutocompletion', true)
     this.codeEditor.setOption('enableSnippets', true)
+    const options = this.codeEditor.getOptions()
+    console.log(options)
     this.codeEditor.clearSelection()
     this.codeEditor.getSession().setUseWorker(false)
     this.codeEditor.on('change', this.onChange)
@@ -122,15 +110,22 @@ export default class Editor extends Vue {
         this.submit()
       }
     })
-
+    let projectId = this.$route.query.pid as string
     if (this.isEdit) {
+      const { data } = await getMockDetailApi(this.$route.query.id as string)
+      this.mockData = data
       this.autoClose = true
       this.temp.url = this.mockData.url // remove /
       this.temp.mode = this.mockData.mode
       this.temp.method = this.mockData.method
       this.temp.description = this.mockData.description
+      projectId = data.project
     }
-
+    getProjectDetailApi(projectId).then(res => {
+      this.project = res.data
+      const url = location.origin + '/mock/' + this.project._id
+      this.baseUrl = this.project.url === '/' ? url : url + this.project.url
+    })
     this.$nextTick(() => {
       this.codeEditor.setValue(this.temp.mode)
       this.format()
@@ -150,7 +145,7 @@ export default class Editor extends Vue {
   }
   close() {
     this.$store.commit('mock/SET_EDITOR_DATA', { mock: null, baseUrl: '' })
-    this.$router.replace(`/project/${this.projectId}`)
+    this.$router.replace(`/project/${this.project._id}`)
   }
   submit() {
     const mockUrl = this.convertUrl(this.temp.url)
@@ -195,6 +190,7 @@ export default class Editor extends Vue {
     flex-direction: column;
     height: 100%;
     flex: 1;
+    font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace !important;
     .code-editor {
       height: 100%;
     }

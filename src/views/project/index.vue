@@ -10,7 +10,7 @@
       :title="pageHeader.title"
       :description="pageHeader.description"
     >
-      <el-radio-group v-model="btnValue" @change="getProjectList" v-if="!groupName">
+      <el-radio-group v-model="btnValue" @change="getProjectList" v-if="!groupName" size="small">
         <el-radio-button :label="$t('p.project.filter[0]')"></el-radio-button>
         <el-radio-button :label="$t('p.project.filter[1]')"></el-radio-button>
         <el-radio-button :label="$t('p.project.filter[2]')"></el-radio-button>
@@ -40,10 +40,11 @@
                 type="ghost"
                 icon="el-icon-link"
                 :title="$t('p.project.control[0]')"
-                class="control-item copy-url"
-                ref="copyUrl"
+                class="control-item"
+                id="copy-url"
+                :ref="`copyUrl_${item._id}`"
                 size="small"
-                @click.stop="clip(item)"
+                @click.stop="clip(item._id, item.url)"
               ></el-button>
               <el-button
                 type="ghost"
@@ -189,18 +190,18 @@ export default class Project extends Vue {
     })
   }
   // 复制项目地址
-  clip(project: any) {
-    const el = this.$refs.copyUrl as any
+  clip(_id: string, url: string) {
+    const el = this.$refs[`copyUrl_${_id}`] as any
     const clipboard = new Clipboard(el[0].$el, {
       text() {
-        return location.origin + '/mock/' + project._id + project.url
+        return location.origin + '/mock/' + _id + url
       }
     })
     clipboard.on('success', (e: any) => {
       e.clearSelection()
-      clipboard.destroy()
       const text = this.$t('p.project.copySuccess') as string
       this.$message.success(text)
+      clipboard.destroy()
     })
   }
   // 克隆项目
@@ -216,6 +217,7 @@ export default class Project extends Vue {
   deleteProject(id: string) {
     deleteProjectApi(id).then(() => {
       this.removeModal.show = false
+      this.removeModal.inputModel = ''
       remove(this.projects, item => {
         return item._id === id
       })
@@ -243,6 +245,9 @@ export default class Project extends Vue {
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
+      @media screen and (max-width: 1919px) {
+        width: 215px;
+      }
       cursor: pointer;
       .project-collect {
         text-align: center;

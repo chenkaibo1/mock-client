@@ -114,7 +114,13 @@
                     >
                       <i class="fa fa-edit color-primary"></i>
                     </el-button>
-                    <el-button size="small" :title="$t('p.detail.action[2]')">
+                    <el-button
+                      size="small"
+                      :title="$t('p.detail.action[2]')"
+                      ref="copyUrl"
+                      class="copy-url"
+                      @click="clip(scope.row.url)"
+                    >
                       <i class="fa fa-link color-blue"></i>
                     </el-button>
                     <el-button size="small" :title="$t('p.detail.action[3]')">
@@ -140,8 +146,8 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 // @ts-ignore
 import Clipboard from 'clipboard'
 import { getProjectDetailApi } from '@/api/project'
-import { getMockListApi } from '@/api/mock'
-import { remove } from 'lodash'
+import { getMockListApi, createMockApi } from '@/api/mock'
+import { remove, merge, cloneDeep } from 'lodash'
 @Component
 export default class ProjectDetail extends Vue {
   activeNav: string = 'apiList'
@@ -190,6 +196,30 @@ export default class ProjectDetail extends Vue {
   }
   tableMethodFilterHandle(value: string, row: any) {
     return row.method.indexOf(value) > -1
+  }
+  // 复制地址
+  clip(mockUrl: string) {
+    const clipboard = new Clipboard('.copy-url', {
+      text: () => {
+        return this.baseUrl + mockUrl
+      }
+    })
+    clipboard.on('success', e => {
+      e.clearSelection()
+      clipboard.destroy()
+      this.$message.success(this.$t('p.detail.copySuccess') as string)
+    })
+  }
+  clone(mock: any) {
+    const data = cloneDeep(mock)
+    merge(data, { url: `${mock.url}_copy_${new Date().getTime()}` })
+    createMockApi(data).then(res => {
+      if (res.data.success) {
+        merge(data, { _id: res.data })
+        this.mocks.push(data)
+        this.$message.success(this.$t('p.detail.create.success') as string)
+      }
+    })
   }
   openEditor(row?: any) {
     if (row) {
