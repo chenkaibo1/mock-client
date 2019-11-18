@@ -62,8 +62,9 @@ import 'brace/ext/language_tools'
 import 'brace/ext/searchbox'
 // @ts-ignore
 import jsBeautify from 'js-beautify/js/lib/beautify'
-import { getMockDetailApi } from '@/api/mock'
+import { getMockDetailApi, createMockApi, editMockApi } from '@/api/mock'
 import { getProjectDetailApi } from '@/api/project'
+import { merge, cloneDeep } from 'lodash'
 // const { snippetManager } = ace.acequire('ace/snippets')
 // import snippetText from './snippets'
 // snippetManager.parseSnippetFile(snippetText, 'javascript')
@@ -92,6 +93,7 @@ export default class Editor extends Vue {
   }
   async mounted() {
     this.codeEditor = ace.edit(this.$refs.codeEditor as any)
+    this.codeEditor.$blockScrolling = Infinity
     this.codeEditor.getSession().setMode('ace/mode/javascript')
     this.codeEditor.setTheme('ace/theme/monokai')
     this.codeEditor.setOption('tabSize', 2)
@@ -99,7 +101,6 @@ export default class Editor extends Vue {
     this.codeEditor.setOption('enableLiveAutocompletion', true)
     this.codeEditor.setOption('enableSnippets', true)
     const options = this.codeEditor.getOptions()
-    console.log(options)
     this.codeEditor.clearSelection()
     this.codeEditor.getSession().setUseWorker(false)
     this.codeEditor.on('change', this.onChange)
@@ -144,10 +145,12 @@ export default class Editor extends Vue {
     this.temp.mode = this.codeEditor.getValue()
   }
   close() {
-    this.$store.commit('mock/SET_EDITOR_DATA', { mock: null, baseUrl: '' })
     this.$router.replace(`/project/${this.project._id}`)
   }
   submit() {
+    if (!this.temp.url) {
+      this.$message.warning('请输入接口URL')
+    }
     const mockUrl = this.convertUrl(this.temp.url)
 
     try {
@@ -165,7 +168,17 @@ export default class Editor extends Vue {
       }
     }
     if (this.isEdit) {
+      editMockApi(
+        merge(cloneDeep(this.temp), { url: mockUrl, project: this.project._id, _id: this.mockData._id })
+      ).then(res => {
+        this.$message.success(this.$t('p.detail.editor.submit.updateSuccess') as string)
+        if (this.autoClose) this.close()
+      })
     } else {
+      createMockApi(merge(cloneDeep(this.temp), { url: mockUrl, project: this.project._id })).then(res => {
+        this.$message.success(this.$t('p.detail.create.success') as string)
+        this.close()
+      })
     }
   }
   preview() {

@@ -8,6 +8,10 @@ module.exports = {
       '/api': {
         target: 'http://localhost:20000',
         changeOrigin: true
+      },
+      '/mock': {
+        target: 'http://localhost:20000',
+        changeOrigin: true
       }
     }
   },

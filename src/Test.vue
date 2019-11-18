@@ -1,32 +1,55 @@
 <template>
-  <div class="test">
-    <div id="sort">
-      <button @click="trunToTab1">tab1</button>
-      <button @click="trunToTab2">tab2</button>
-      <div v-for="(item, index) in arrData" :key="index">
-        <div @click="clickItem(index)" class="item">{{item}}</div>
-      </div>
+  <div class="em-editor">
+    <div class="editor-wrapper">
+      <div ref="codeEditor" class="code-editor"></div>
     </div>
   </div>
 </template>
 
-<script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator'
-@Component
-export default class Test extends Vue {
-  arrData: number[] = []
-  trunToTab1() {
-    this.arrData = [1, 2, 3, 4]
-  }
-  trunToTab2() {
-    this.arrData = [5, 6, 7, 8]
-  }
-  clickItem() {
-    // @ts-ignore
-    document.getElementsByClassName('item')[0].style.color = 'red'
+<script>
+import * as ace from 'brace'
+import 'brace/mode/javascript'
+import 'brace/theme/monokai'
+import 'brace/ext/language_tools'
+import 'brace/ext/searchbox'
+export default {
+  data() {
+    return {
+      codeEditor: null
+    }
+  },
+  mounted() {
+    this.codeEditor = ace.edit(this.$refs.codeEditor)
+    this.codeEditor.getSession().setMode('ace/mode/javascript')
+    this.codeEditor.setTheme('ace/theme/monokai')
+    this.codeEditor.setOption('tabSize', 2)
+    this.codeEditor.setOption('fontSize', 15)
+    this.codeEditor.setOption('enableLiveAutocompletion', true)
+    this.codeEditor.setOption('enableSnippets', true)
+    const options = this.codeEditor.getOptions()
+    console.log(options)
   }
 }
 </script>
-
-<style lang="scss" scoped>
+<style>
+.em-editor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  overflow: hidden;
+}
+.editor-wrapper {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+.code-editor {
+  height: 100%;
+}
 </style>

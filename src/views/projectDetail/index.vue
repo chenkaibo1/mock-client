@@ -40,7 +40,7 @@
           </div>
           <div class="project-switcher">
             <ul>
-              <li>
+              <li @click="openEditor()">
                 <i class="fa fa-plus"></i>
                 {{$t('p.detail.create.action')}}
               </li>
@@ -123,10 +123,18 @@
                     >
                       <i class="fa fa-link color-blue"></i>
                     </el-button>
-                    <el-button size="small" :title="$t('p.detail.action[3]')">
+                    <el-button
+                      size="small"
+                      :title="$t('p.detail.action[3]')"
+                      @click="clone(scope.row)"
+                    >
                       <i class="fa fa-copy color-yellow"></i>
                     </el-button>
-                    <el-button size="small" :title="$t('p.detail.action[4]')">
+                    <el-button
+                      size="small"
+                      :title="$t('p.detail.action[4]')"
+                      @click="deleteMock(scope.row._id)"
+                    >
                       <i class="fa fa-trash color-red"></i>
                     </el-button>
                   </el-button-group>
@@ -146,8 +154,8 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 // @ts-ignore
 import Clipboard from 'clipboard'
 import { getProjectDetailApi } from '@/api/project'
-import { getMockListApi, createMockApi } from '@/api/mock'
-import { remove, merge, cloneDeep } from 'lodash'
+import { getMockListApi, createMockApi, deleteMockApi } from '@/api/mock'
+import { merge, cloneDeep, omit } from 'lodash'
 @Component
 export default class ProjectDetail extends Vue {
   activeNav: string = 'apiList'
@@ -197,6 +205,13 @@ export default class ProjectDetail extends Vue {
   tableMethodFilterHandle(value: string, row: any) {
     return row.method.indexOf(value) > -1
   }
+  openEditor(row?: any) {
+    if (row) {
+      this.$router.push(`/editor?type=edit&id=${row._id}`)
+    } else {
+      this.$router.push(`/editor?type=create&pid=${this.project._id}`)
+    }
+  }
   // 复制地址
   clip(mockUrl: string) {
     const clipboard = new Clipboard('.copy-url', {
@@ -211,22 +226,21 @@ export default class ProjectDetail extends Vue {
     })
   }
   clone(mock: any) {
-    const data = cloneDeep(mock)
+    let data = cloneDeep(mock)
+    data = omit(data, ['_id'])
     merge(data, { url: `${mock.url}_copy_${new Date().getTime()}` })
     createMockApi(data).then(res => {
-      if (res.data.success) {
+      if (res.data) {
         merge(data, { _id: res.data })
         this.mocks.push(data)
         this.$message.success(this.$t('p.detail.create.success') as string)
       }
     })
   }
-  openEditor(row?: any) {
-    if (row) {
-      this.$router.push(`/editor?type=edit&id=${row._id}`)
-    } else {
-      this.$router.push(`/editor?type=create&pid=${this.project._id}`)
-    }
+  deleteMock(id: string) {
+    deleteMockApi(id).then(() => {
+      this.mocks.splice(this.mocks.findIndex(item => item._id === id), 1)
+    })
   }
 }
 </script>
