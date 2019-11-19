@@ -155,6 +155,7 @@ export default class Group extends Vue {
         joinGroupApi(this.group).then(() => {
           this.showGroupDialog = false
           this.group = {}
+          this.getGroupList()
         })
         break
       case 'editGroup':

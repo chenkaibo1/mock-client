@@ -148,9 +148,6 @@ export default class Editor extends Vue {
     this.$router.replace(`/project/${this.project._id}`)
   }
   submit() {
-    if (!this.temp.url) {
-      this.$message.warning('请输入接口URL')
-    }
     const mockUrl = this.convertUrl(this.temp.url)
 
     try {

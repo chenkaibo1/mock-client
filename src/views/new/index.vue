@@ -252,12 +252,13 @@ export default class EmNew extends Vue {
       if (valid) {
         const data: any = {
           name: this.formData.projectName,
+          user: this.user.id,
           swagger_url: this.formData.projectSwagger,
           description: this.formData.projectDesc || this.formData.projectName,
           url: this.formData.projectUrl,
           members: this.isGroup ? [] : this.formData.projectMembers
         }
-        this.formData.groupId === this.user.id ? (data.user = this.user.id) : (data.group = this.formData.groupId)
+        this.formData.groupId !== this.user.id && (data.group = this.formData.groupId)
         createProjectApi(data).then(() => {
           this.$router.push('/')
         })

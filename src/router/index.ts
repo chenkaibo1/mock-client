@@ -56,6 +56,16 @@ const router = new Router({
           path: '/editor',
           name: 'editor',
           component: () => import(/* webpackChunkName: "editor" */ '@/views/editor/index.vue')
+        },
+        {
+          path: '/docs',
+          name: 'docs',
+          component: () => import(/* webpackChunkName: "docs" */ '@/views/docs/index.vue')
+        },
+        {
+          path: '/dashboard',
+          name: 'dashboard',
+          component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue')
         }
       ]
     },
