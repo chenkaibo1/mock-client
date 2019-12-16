@@ -1,7 +1,7 @@
 import Vue, { PluginObject } from 'vue'
 import axios from 'axios'
 import router from '@/router'
-import { Message } from 'element-ui'
+import { Loading, Message } from 'element-ui'
 import { getItem, clear } from '../common/storage'
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -14,9 +14,40 @@ const config = {
   // withCredentials: true, // Check cross-site Access-Control
 }
 
+let loadinginstace: any = '' // loading对象
+let needLoadingRequestCount = 0 // 请求的loading次数
+function startLoading() {
+  // 使用Element loading-start 方法
+  loadinginstace = Loading.service({
+    fullscreen: true,
+    background: 'rgba(0, 0, 0, 0.8)'
+  })
+}
+
+function endLoading() {
+  // 使用Element loading-close 方法
+  loadinginstace.close()
+}
+function showFullScreenLoading() {
+  // 显示加载
+  if (needLoadingRequestCount === 0) {
+    startLoading()
+  }
+  needLoadingRequestCount++
+}
+
+function tryHideFullScreenLoading() {
+  // 隐藏加载
+  if (needLoadingRequestCount <= 0) return
+  needLoadingRequestCount--
+  if (needLoadingRequestCount === 0) {
+    endLoading()
+  }
+}
 const _axios = axios.create(config)
 _axios.interceptors.request.use(
   (cfg) => {
+    showFullScreenLoading()
     if (!cfg.headers.common.token) cfg.headers.common.token = getItem('token') ? getItem('token') : ''
     // Do something before request is sent
     return cfg
@@ -30,6 +61,7 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
   (res) => {
+    tryHideFullScreenLoading() // 关闭加载动画
     if (res.status === 200) {
       if (Object.getOwnPropertyDescriptor(res.data, 'success') && !res.data.success) {
         if (res.data.message) {

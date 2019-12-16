@@ -18,8 +18,10 @@ import zhLocaleIView from '@/locales/zh-CN.js'
 import enLocaleIView from '@/locales/en.js'
 // @ts-ignore
 import clickOutside from 'v-click-outside'
+import Viewer from 'v-viewer'
 
 Vue.use(clickOutside)
+Vue.use(Viewer)
 // 添加国际化
 Vue.use(VueI18n)
 const messages = {

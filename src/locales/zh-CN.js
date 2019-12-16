@@ -1,4 +1,5 @@
 export default {
+  lang: '选择语言',
   confirm: {
     title: '提示'
   },
@@ -164,6 +165,7 @@ export default {
       header: {
         description: [ '个人项目', '团队项目' ]
       },
+      btn: [ '我创建的', '全部' ],
       nav: [ '接口列表', '设置' ],
       workbench: '工作台',
       download: '打包下载 | 下载',

@@ -1,6 +1,15 @@
-const json = {
+const { merge, assign } = require('lodash')
+const obj1 = {
   a: 1,
-  b: 2
+  b: {
+    c: 3,
+    d: 4
+  }
 }
-for (let key in json) {
+const obj2 = {
+  b: { e: 5 },
+  c: 4
 }
+// merge(obj1, obj2)
+assign(obj1, obj2)
+console.log(obj1)

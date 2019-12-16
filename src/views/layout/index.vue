@@ -111,7 +111,7 @@
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
-import { getItem } from '@/common/storage'
+import { getItem, clear } from '@/common/storage'
 @Component
 export default class Layout extends Vue {
   activeIndex: string = '1'
@@ -127,12 +127,10 @@ export default class Layout extends Vue {
   open(url: string) {
     window.open(url)
   }
-  // mousewheel(e: Event) {
-  //   const scrollbar = this.$refs.scrollbar as any
-  //   this.$store.commit('SET_SCROLL', scrollbar.wrap.scrollTop)
-  //   console.log(scrollbar)
-  // }
-  logOut() {}
+  logOut() {
+    clear()
+    this.$router.push('/login')
+  }
 }
 </script>
 
@@ -170,7 +168,7 @@ export default class Layout extends Vue {
         }
       }
       .menu {
-        flex: 15;
+        flex: 18;
         .nav-avatar {
           float: right;
           img {
@@ -182,8 +180,6 @@ export default class Layout extends Vue {
         }
       }
     }
-  }
-  .content {
   }
 }
 .nav-icon-color {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router, { RawLocation } from 'vue-router'
 import Login from '@/views/login/index.vue'
 import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import { getItem } from '../common/storage'
 
 Vue.use(Router)
@@ -66,6 +67,11 @@ const router = new Router({
           path: '/dashboard',
           name: 'dashboard',
           component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue')
+        },
+        {
+          path: '/profile',
+          name: 'profile',
+          component: () => import(/* webpackChunkName: "profile" */ '@/views/profile/index.vue')
         }
       ]
     },

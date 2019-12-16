@@ -7,7 +7,7 @@
       <el-col :span="2" class="header-logo">
         <i :class="iconClass"></i>
       </el-col>
-      <el-col :span="16">
+      <el-col :span="14">
         <transition name="fade">
           <div class="title-description">
             <h2 class="title">{{title}}</h2>
@@ -15,7 +15,7 @@
           </div>
         </transition>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="8">
         <slot></slot>
       </el-col>
     </el-row>
@@ -27,23 +27,28 @@
   </div>
 </template>
 
-<script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator'
-@Component
-export default class EmHeader extends Vue {
-  @Prop()
-  icon!: string
-  @Prop()
-  title!: string
-  @Prop()
-  description!: string
-
-  get iconClass() {
-    return `fa fa-${this.icon} fa-2x`
+<script>
+export default {
+  name: 'EmHeader',
+  props: {
+    icon: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    iconClass() {
+      return `fa fa-${this.icon} fa-2x`
+    }
   }
-  // get scroll() {
-  //   return this.$store.state.scroll
-  // }
 }
 </script>
 

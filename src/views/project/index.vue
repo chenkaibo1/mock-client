@@ -111,7 +111,10 @@ export default class Project extends Vue {
   typeMap: any = {
     全部: 0,
     我创建的: 1,
-    我加入的: 2
+    我加入的: 2,
+    All: 0,
+    Created: 1,
+    Joined: 2
   }
   groupName: string = ''
   emptyDesc: string = ''

@@ -139,12 +139,17 @@
 <script lang='ts'>
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
+import emShapeShifter from '@/components/shape-shifter/index.vue'
 import { loginApi } from '@/api/user'
 import { setItem } from '../../common/storage'
 import { getWallpaper } from '@/api/util'
 // @ts-ignore
 import md5 from 'md5'
-@Component
+@Component({
+  components: {
+    emShapeShifter
+  }
+})
 export default class Layout extends Vue {
   loginData: any = {
     username: '',
@@ -277,7 +282,7 @@ export default class Layout extends Vue {
     overflow: hidden;
     top: 0;
     left: 0;
-    background-color: $--em-color-primary;
+    background-color: $--em-color-Auxiliary-6;
     width: 100%;
     height: 100%;
     transform: translateY(0);

@@ -1,7 +1,7 @@
 import axios from '../plugins/axios'
 // 根据项目获取接口
-export function getMockListApi(pid: string = '') {
-  return axios.get(`/mock/list?pid=${pid}`)
+export function getMockListApi(pid: string = '', type: number = 0) {
+  return axios.get(`/mock/list?pid=${pid}&type=${type}`)
 }
 // 获取接口详情
 export function getMockDetailApi(id: string = '') {

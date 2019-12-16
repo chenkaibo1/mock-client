@@ -2,6 +2,10 @@
   <div class="em-project-detail">
     <em-add @click.native="$router.push('/new')"></em-add>
     <em-header :icon="pageHeader.icon" :title="project.name" :description="pageHeader.description">
+      <el-radio-group v-model="btnValue" @change="getMockList" size="small" style>
+        <el-radio-button :label="$t('p.detail.btn[0]')"></el-radio-button>
+        <el-radio-button :label="$t('p.detail.btn[1]')"></el-radio-button>
+      </el-radio-group>
       <ul slot="nav" class="nav-container">
         <li :class="{'is-active': activeNav === 'apiList'}" @click="activeNav = 'apiList'">
           <i class="fa fa-list"></i>
@@ -163,6 +167,13 @@ export default class ProjectDetail extends Vue {
     user: {},
     members: []
   }
+  btnValue: string = '全部'
+  typeMap: any = {
+    全部: 0,
+    我创建的: 1,
+    All: 0,
+    Created: 1
+  }
   mocks: any[] = []
   group: any = ''
   tableMethodFilters: any[] = [
@@ -197,9 +208,12 @@ export default class ProjectDetail extends Vue {
   mounted() {
     getProjectDetailApi(this.$route.params.id).then(res => {
       this.project = res.data
-      getMockListApi(this.$route.params.id).then(res => {
-        this.mocks = res.data
-      })
+    })
+    this.getMockList()
+  }
+  getMockList() {
+    getMockListApi(this.$route.params.id, this.typeMap[this.btnValue]).then(res => {
+      this.mocks = res.data
     })
   }
   tableMethodFilterHandle(value: string, row: any) {

@@ -1,4 +1,5 @@
 export default {
+  lang: 'Choose Language',
   confirm: {
     title: 'Notification'
   },
@@ -181,6 +182,7 @@ export default {
       header: {
         description: [ 'Personal Project', 'Team Project' ]
       },
+      btn: [ 'Created', 'All' ],
       nav: [ 'Mock List', 'Setting' ],
       workbench: 'Work Station',
       download: 'Downlaod as zip file | Download',
