@@ -12,6 +12,10 @@ module.exports = {
       '/mock': {
         target: 'http://localhost:20000',
         changeOrigin: true
+      },
+      '/static': {
+        target: 'http://localhost:20000',
+        changeOrigin: true
       }
     }
   },

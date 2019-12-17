@@ -8,7 +8,7 @@
     <transition name="fade">
       <div class="em-container profile">
         <el-row :gutter="20">
-          <el-col :span="16">
+          <el-col :span="18">
             <el-form :model="formData" label-position="top" class="profile-form" :rules="rules">
               <el-form-item :label="$t('p.profile.form.language')">
                 <el-select v-model="lang">
@@ -34,7 +34,27 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :span="8">少时诵诗书所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所</el-col>
+          <el-col :span="6">
+            <label class="el-form-item__label">{{$t('p.profile.form.avatar')}}</label>
+            <viewer>
+              <img
+                :src="formData.headImg || '/404lazyImg.jpg'"
+                class="avatar"
+                :alt="formData.nickName"
+                :title="formData.nickName"
+              />
+            </viewer>
+            <el-upload
+              class="user-img-upload"
+              action="/api/util/upload"
+              accept=".jpeg, .jpg, .png"
+              :show-file-list="false"
+              :headers="headers"
+              :on-success="handleUploadSuccess"
+            >
+              <el-button size="small" type="primary">点击上传</el-button>
+            </el-upload>
+          </el-col>
         </el-row>
       </div>
     </transition>
@@ -48,6 +68,10 @@ import { assign } from 'lodash'
 @Component
 export default class Profile extends Vue {
   lang = getItem('lang') || 'zh-CN'
+  headers = {
+    token: getItem('token'),
+    crossDomain: true
+  }
   formData: any = {
     nickName: '',
     password: '',
@@ -75,6 +99,9 @@ export default class Profile extends Vue {
   mounted() {
     assign(this.formData, JSON.parse(getItem('user')))
   }
+  handleUploadSuccess(resp: any, file: any) {
+    this.formData.headImg = resp.data.path
+  }
 }
 </script>
 
@@ -90,6 +117,14 @@ export default class Profile extends Vue {
     margin: 30px auto;
     /deep/ .el-select {
       width: 100%;
+    }
+    .avatar {
+      width: 100%;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    .user-img-upload {
+      text-align: center;
     }
   }
 }

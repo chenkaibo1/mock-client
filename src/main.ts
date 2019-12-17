@@ -19,9 +19,17 @@ import enLocaleIView from '@/locales/en.js'
 // @ts-ignore
 import clickOutside from 'v-click-outside'
 import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
+// @ts-ignore
+import VueLazyload from 'vue-lazyload'
 
 Vue.use(clickOutside)
 Vue.use(Viewer)
+Vue.use(VueLazyload, {
+  error: '/404lazyImg.jpg',
+  loading: '/loading.gif',
+  attemp: 1
+})
 // 添加国际化
 Vue.use(VueI18n)
 const messages = {
