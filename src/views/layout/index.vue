@@ -82,9 +82,13 @@
                   <i class="fa fa-pencil-square-o fa-lg nav-icon-color"></i>
                   {{$t('c.layout.menu[5][0]')}}
                 </el-menu-item>
-                <el-menu-item index="6-2" @click.native="logOut">
-                  <i class="fa fa-sign-out fa-lg nav-icon-color"></i>
+                <el-menu-item index="6-2" @click.native="showDialog=true">
+                  <i class="fa fa-language fa-lg nav-icon-color"></i>
                   {{$t('c.layout.menu[5][1]')}}
+                </el-menu-item>
+                <el-menu-item index="6-3" @click.native="logOut">
+                  <i class="fa fa-sign-out fa-lg nav-icon-color"></i>
+                  {{$t('c.layout.menu[5][2]')}}
                 </el-menu-item>
               </el-submenu>
               <el-menu-item
@@ -94,10 +98,11 @@
                 @click.native="$router.push('/login')"
               >
                 <i type="log-in"></i>
-                {{$t('c.layout.menu[5][2]')}}
+                {{$t('c.layout.menu[5][3]')}}
               </el-menu-item>
             </el-menu>
           </div>
+          <set-language v-model="showDialog" />
         </div>
       </transition>
       <div class="content">
@@ -117,6 +122,7 @@ export default class Layout extends Vue {
   activeIndex: string = '1'
   pageKey: string = ''
   searchValue: string = ''
+  showDialog: boolean = false
   get userHeadImg() {
     return JSON.parse(getItem('user')).headImg
   }

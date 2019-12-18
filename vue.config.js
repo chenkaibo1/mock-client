@@ -1,10 +1,16 @@
 // const os = require('os');
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+// const isProduction = process.env.NODE_ENV === 'production'
 module.exports = {
   // assetsDir: 'static',
   productionSourceMap: false,
   devServer: {
     port: process.env.NODE_ENV === 'test' ? '8090' : '9090',
     proxy: {
+      '/image': {
+        target: 'http://localhost:20000',
+        changeOrigin: true
+      },
       '/api': {
         target: 'http://localhost:20000',
         changeOrigin: true
@@ -12,38 +18,40 @@ module.exports = {
       '/mock': {
         target: 'http://localhost:20000',
         changeOrigin: true
-      },
-      '/static': {
-        target: 'http://localhost:20000',
-        changeOrigin: true
       }
     }
   },
   configureWebpack: (config) => {
-    // for (let i = 0; i < config.rules.module.length; i++) {
-    //   console.log(config.rules.module[i])
-    // }
     // config.resolve.extensions = [ '.js', '.ts', '.vue', '.json' ]
     if (process.env.NODE_ENV === 'test') {
       config.entry.app = [ './src/test.ts' ]
     }
+    // if (isProduction) {
+    //   // 为生产环境修改配置...
+    //   config.plugins.push(
+    //     // 生产环境自动删除console
+    //     new UglifyJsPlugin({
+    //       uglifyOptions: {
+    //         compress: {
+    //           drop_debugger: true,
+    //           drop_console: true
+    //         }
+    //       },
+    //       sourceMap: false,
+    //       parallel: true
+    //     })
+    //   )
+    // }
   }
   // chainWebpack: (config) => {
-  //   // config.plugin('fork-ts-checker').tap((args) => {
-  //   //   args[0].workersNumber = os.cpus.length
-  //   //   args[0].memoryLimit = 4096
-  //   //   return args
-  //   // })
-  //   // 修改它的选项...
-  //   console.log(config.plugins)
-  //   return config
-  // }
-  // pluginOptions: {
-  //   i18n: {
-  //     locale: 'zh_CN', // The locale of project localization
-  //     fallbackLocale: 'en', // The fallback locale of project localization
-  //     localeDir: 'locales', // The directory where store localization messages of project
-  //     enableInSFC: false // Enable locale messages in Single file components
+  //   if (isProduction) {
+  //     // 压缩代码
+  //     config.optimization.minimize(true)
+  //     // 分割代码
+  //     config.optimization.splitChunks({
+  //       chunks: 'all'
+  //     })
   //   }
+  //   return config
   // }
 }

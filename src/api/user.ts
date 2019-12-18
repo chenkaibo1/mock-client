@@ -12,3 +12,7 @@ export function loginApi(params: any) {
 export function getUserByKeywordApi(keyword: string) {
   return axios.get(`/user/keyword?keyword=${keyword}`)
 }
+// 用户编辑
+export function editUserApi(params: any) {
+  return axios.put('/user/edit', params)
+}

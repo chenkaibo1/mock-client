@@ -250,7 +250,7 @@ export default {
         'Dashboard',
         'Docs',
         [ 'More', 'API Generator', 'Mock Syntax' ],
-        [ 'Edit Profile', 'Logout', 'Login' ]
+        [ 'Edit Profile', 'Language', 'Logout', 'Login' ]
       ]
     },
     logOut: {

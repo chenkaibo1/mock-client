@@ -9,7 +9,13 @@
       <div class="em-container profile">
         <el-row :gutter="20">
           <el-col :span="18">
-            <el-form :model="formData" label-position="top" class="profile-form" :rules="rules">
+            <el-form
+              :model="formData"
+              label-position="top"
+              class="profile-form"
+              :rules="rules"
+              ref="userForm"
+            >
               <el-form-item :label="$t('p.profile.form.language')">
                 <el-select v-model="lang">
                   <el-option
@@ -30,7 +36,7 @@
                 <el-input v-model="formData.passwordCheck"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary">{{$t('p.profile.form.update')}}</el-button>
+                <el-button type="primary" @click="editUser">{{$t('p.profile.form.update')}}</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -63,8 +69,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { getItem } from '@/common/storage'
-import { assign } from 'lodash'
+import { editUserApi } from '@/api/user'
+import { getItem, clear } from '@/common/storage'
+import { assign, clone } from 'lodash'
+import md5 from 'md5'
 @Component
 export default class Profile extends Vue {
   lang = getItem('lang') || 'zh-CN'
@@ -101,6 +109,19 @@ export default class Profile extends Vue {
   }
   handleUploadSuccess(resp: any, file: any) {
     this.formData.headImg = resp.data.path
+  }
+  editUser() {
+    const userForm = this.$refs.userForm as any
+    userForm.validate((flag: boolean) => {
+      if (flag) {
+        const cloneDate = clone(this.formData)
+        cloneDate.password && (cloneDate.password = md5(md5(cloneDate.password)))
+        editUserApi(cloneDate).then(() => {
+          clear()
+          this.$router.push('/login')
+        })
+      }
+    })
   }
 }
 </script>
