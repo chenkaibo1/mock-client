@@ -60,25 +60,17 @@ import 'brace/mode/javascript'
 import 'brace/theme/monokai'
 import 'brace/ext/language_tools'
 import 'brace/ext/searchbox'
+import './snippets'
 // @ts-ignore
 import jsBeautify from 'js-beautify/js/lib/beautify'
 import { getMockDetailApi, createMockApi, editMockApi } from '@/api/mock'
 import { getProjectDetailApi } from '@/api/project'
 import { merge, cloneDeep } from 'lodash'
-// const { snippetManager } = ace.acequire('ace/snippets')
-// import snippetText from './snippets'
-// snippetManager.parseSnippetFile(snippetText, 'javascript')
 @Component
 export default class Editor extends Vue {
   codeEditor: any = null
   autoClose: boolean = true
-  methods: any[] = [
-    { label: 'get', value: 'get' },
-    { label: 'post', value: 'post' },
-    { label: 'put', value: 'put' },
-    { label: 'delete', value: 'delete' },
-    { label: 'patch', value: 'patch' }
-  ]
+  methods: any[] = [{ label: 'get', value: 'get' }, { label: 'post', value: 'post' }, { label: 'put', value: 'put' }, { label: 'delete', value: 'delete' }, { label: 'patch', value: 'patch' }]
   baseUrl: string = ''
   mockData: any = {}
   project: any = {}
@@ -91,6 +83,15 @@ export default class Editor extends Vue {
   get isEdit() {
     return this.$route.query.type === 'edit'
   }
+  // created() {
+  //   const mockSnippets = require('./mock.snippets')
+  //   const javascriptSnippets = require('./javascript.snippets')
+  //   // @ts-ignore
+  //   ace.define('ace/snippets/javascript', ['require', 'exports', 'module'], function(e, t) {
+  //     t.snippetText = javascriptSnippets + '\n' + mockSnippets
+  //     t.scope = 'javascript'
+  //   })
+  // }
   async mounted() {
     this.codeEditor = ace.edit(this.$refs.codeEditor as any)
     this.codeEditor.$blockScrolling = Infinity
@@ -165,9 +166,7 @@ export default class Editor extends Vue {
       }
     }
     if (this.isEdit) {
-      editMockApi(
-        merge(cloneDeep(this.temp), { url: mockUrl, project: this.project._id, _id: this.mockData._id })
-      ).then(res => {
+      editMockApi(merge(cloneDeep(this.temp), { url: mockUrl, project: this.project._id, _id: this.mockData._id })).then(res => {
         this.$message.success(this.$t('p.detail.editor.submit.updateSuccess') as string)
         if (this.autoClose) this.close()
       })

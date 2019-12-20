@@ -48,10 +48,15 @@
     "compression-webpack-plugin": "^3.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "markdown-it-anchor": "^5.2.5",
+    "markdown-it-attrs": "^3.0.1",
     "node-sass": "^4.9.2",
+    "raw-loader": "^4.0.0",
     "sass-loader": "^7.1.0",
+    "transliteration": "^2.1.8",
     "typescript": "^3.4.3",
     "uglifyjs-webpack-plugin": "^2.2.0",
+    "vue-markdown-loader": "^2.4.1",
     "vue-template-compiler": "^2.6.10"
   }
 }

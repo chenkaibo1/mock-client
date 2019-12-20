@@ -16,7 +16,7 @@
                 {{$tc('p.dashboard.total.mockUse', 1)}}
               </h2>
               <p class="number">
-                <count-to :value="total.mockUseCount"></count-to>
+                <count-to :endVal="dashboard.totalUseMockCount || 0"></count-to>
                 <span>{{$tc('p.dashboard.total.mockUse', 2)}}</span>
               </p>
             </div>
@@ -30,7 +30,7 @@
                 {{$tc('p.dashboard.total.project', 1)}}
               </h2>
               <p class="number">
-                <count-to :value="total.projectCount"></count-to>
+                <count-to :endVal="dashboard.totalProjectCount"></count-to>
                 <span>{{$tc('p.dashboard.total.project', 2)}}</span>
               </p>
             </div>
@@ -44,7 +44,7 @@
                 {{$tc('p.dashboard.total.mock', 1)}}
               </h2>
               <p class="number">
-                <count-to :value="total.mockCount"></count-to>
+                <count-to :endVal="dashboard.totalMockCount"></count-to>
                 <span>{{$tc('p.dashboard.total.mock', 2)}}</span>
               </p>
             </div>
@@ -61,7 +61,7 @@
                 {{$tc('p.dashboard.total.user', 1)}}
               </h2>
               <p class="number">
-                <count-to :value="total.userCount"></count-to>
+                <count-to :endVal="dashboard.totalUserCount"></count-to>
                 <span>{{$tc('p.dashboard.total.user', 2)}}</span>
               </p>
             </div>
@@ -76,7 +76,7 @@
                 {{$tc('p.dashboard.today.user', 1)}}
               </h2>
               <p class="number">
-                <count-to :value="today.userCount"></count-to>
+                <count-to :endVal="dashboard.todayUserCount"></count-to>
                 <span>{{$tc('p.dashboard.today.user', 2)}}</span>
               </p>
             </div>
@@ -92,7 +92,7 @@
                 {{$tc('p.dashboard.today.mockUse', 1)}}
               </h2>
               <p class="number">
-                <count-to :value="today.mockUseCount"></count-to>
+                <count-to :endVal="dashboard.todayUseMockCount || 0"></count-to>
                 <span>{{$tc('p.dashboard.today.mockUse', 2)}}</span>
               </p>
             </div>
@@ -106,7 +106,7 @@
                 {{$tc('p.dashboard.today.project', 1)}}
               </h2>
               <p class="number">
-                <count-to :value="today.projectCount"></count-to>
+                <count-to :endVal="dashboard.todayProjectCount"></count-to>
                 <span>{{$tc('p.dashboard.today.project', 2)}}</span>
               </p>
             </div>
@@ -120,7 +120,7 @@
                 {{$tc('p.dashboard.today.mock', 1)}}
               </h2>
               <p class="number">
-                <count-to :value="today.mockCount"></count-to>
+                <count-to :endVal="dashboard.todayMockCount"></count-to>
                 <span>{{$tc('p.dashboard.today.mock', 2)}}</span>
               </p>
             </div>
@@ -138,7 +138,7 @@
             </el-col>
             <el-col :span="18">
               <el-row :gutter="10" style="padding: 0 10px;">
-                <el-col :span="2" v-for="(item, i) in users" :key="i">
+                <el-col :span="2" v-for="(item, i) in dashboard.users" :key="i">
                   <img :src="item.headImg" :title="item.nick_name" />
                 </el-col>
               </el-row>
@@ -152,6 +152,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { getDashboardApi } from '@/api/util'
 // @ts-ignore
 import CountTo from 'vue-count-to'
 @Component({
@@ -159,10 +160,13 @@ import CountTo from 'vue-count-to'
     CountTo
   }
 })
-export default class dashboard extends Vue {
-  total: number = 123
-  today: any = {}
-  users: any[] = []
+export default class Dashboard extends Vue {
+  dashboard: any = {}
+  mounted() {
+    getDashboardApi().then(res => {
+      this.dashboard = res.data
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -216,8 +220,8 @@ export default class dashboard extends Vue {
       }
       img {
         display: block;
-        width: 50px;
-        height: 50px;
+        width: 80px;
+        height: 80px;
         border-radius: 4px;
         margin-top: 10px;
       }

@@ -16,16 +16,6 @@
               :rules="rules"
               ref="userForm"
             >
-              <el-form-item :label="$t('p.profile.form.language')">
-                <el-select v-model="lang">
-                  <el-option
-                    v-for="item in langList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item :label="$t('p.profile.form.nickName')" prop="nickName">
                 <el-input v-model="formData.nickName"></el-input>
               </el-form-item>
@@ -75,7 +65,6 @@ import { assign, clone } from 'lodash'
 import md5 from 'md5'
 @Component
 export default class Profile extends Vue {
-  lang = getItem('lang') || 'zh-CN'
   headers = {
     token: getItem('token'),
     crossDomain: true
@@ -86,11 +75,11 @@ export default class Profile extends Vue {
     passwordCheck: '',
     headImg: ''
   }
-  langList = [{ label: '简体中文', value: 'zh-CN' }, { label: 'English', value: 'en' }]
   validator = (rule: any, value: string, callback: Function) => {
     const that = this
     if (value !== that.formData.password) {
-      const errStr = that.lang === 'en' ? 'Password is not matching!' : '密码不一致'
+      const lang = getItem('lang') || 'zh-CN'
+      const errStr = lang === 'en' ? 'Password is not matching!' : '密码不一致'
       callback(new Error(errStr))
     } else {
       callback()

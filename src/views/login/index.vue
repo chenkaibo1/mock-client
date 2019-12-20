@@ -142,7 +142,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import emShapeShifter from '@/components/shape-shifter/index.vue'
 import { loginApi } from '@/api/user'
 import { setItem } from '../../common/storage'
-import { getWallpaper } from '@/api/util'
+import { getWallpaperApi } from '@/api/util'
 // @ts-ignore
 import md5 from 'md5'
 @Component({
@@ -176,7 +176,7 @@ export default class Layout extends Vue {
     }
   }
   mounted() {
-    getWallpaper().then(res => {
+    getWallpaperApi().then(res => {
       const data = res.data.data[0]
       if (res.data.type === 'bing') {
         this.wallpaper.url = /\.com/.test(data.url) ? data.url : 'https://cn.bing.com' + data.url

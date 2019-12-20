@@ -1,7 +1,11 @@
 <template>
   <div class="em-project-detail">
     <em-add @click.native="$router.push('/new')"></em-add>
-    <em-header :icon="pageHeader.icon" :title="project.name" :description="pageHeader.description">
+    <em-header
+      :icon="pageHeader.icon"
+      :title="project.name || ''"
+      :description="pageHeader.description"
+    >
       <el-radio-group v-model="btnValue" @change="getMockList" size="small" style>
         <el-radio-button :label="$t('p.detail.btn[0]')"></el-radio-button>
         <el-radio-button :label="$t('p.detail.btn[1]')"></el-radio-button>

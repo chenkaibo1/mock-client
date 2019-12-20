@@ -12,4 +12,3 @@ const obj2 = {
 }
 // merge(obj1, obj2)
 assign(obj1, obj2)
-console.log(obj1)
