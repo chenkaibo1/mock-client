@@ -18,7 +18,7 @@
     "element-ui": "^2.4.5",
     "font-awesome-scss": "^1.0.0",
     "js-beautify": "^1.10.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "md5": "^2.2.1",
     "nprogress": "^0.2.0",
     "v-click-outside": "^2.1.4",
